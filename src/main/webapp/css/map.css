@@ -1,0 +1,19 @@
+/*图例*/
+.legend{
+	position: absolute;
+	z-index: 999;
+	width: 200px;
+	/*padding: 25px 20px 0 20px;*/
+	/*margin-right: 100px;*/
+	position: fixed;
+	bottom: 22px;
+	background-color: rgba(265, 265, 265, 0.6);
+	border-radius: .25rem;
+	font-size: 13px;
+	color: #666;
+	box-shadow: 0 2px 6px 0 rgba(27, 142, 236, 0.5);
+}
+
+.alarm_btn{
+
+}

@@ -1,0 +1,12 @@
+/*地图控件样式*/
+#container .ol-zoom {
+    top: 82px;
+    right: 13px;
+    left: unset;
+}
+
+#container .mapType-wrapper {
+    position: absolute;
+    right: 15px;
+}
+

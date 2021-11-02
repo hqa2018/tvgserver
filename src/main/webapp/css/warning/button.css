@@ -1,0 +1,167 @@
+/* =====================================================
+   Some defaults across all toggle demos
+   ===================================================== */
+.toggle {
+  display: block;
+  text-align: center;
+  user-select: none;
+}
+
+.toggle--checkbox {
+  display: none;
+}
+
+.toggle--btn {
+  display: block;
+  margin: 0 auto;
+  transition: all 350ms ease-in;
+}
+.toggle--btn:hover {
+  cursor: pointer;
+}
+
+.toggle--btn, .toggle--btn:before, .toggle--btn:after,
+.toggle--checkbox,
+.toggle--checkbox:before,
+.toggle--checkbox:after,
+.toggle--feature,
+.toggle--feature:before,
+.toggle--feature:after {
+  transition: all 250ms ease-in;
+}
+.toggle--btn:before, .toggle--btn:after,
+.toggle--checkbox:before,
+.toggle--checkbox:after,
+.toggle--feature:before,
+.toggle--feature:after {
+  content: '';
+  display: block;
+}
+
+/* =====================================================
+   Toggle - switch stylee
+   ===================================================== */
+	
+.toggle--switch .toggle--btn {
+    position: relative;
+    width: 100px;
+    height: 26px;
+    font-family: 'PT Sans', Sans Serif;
+    text-transform: uppercase;
+    color: #9a9a9a;
+    background: linear-gradient(90deg, #ffffff 0%, #fefffd 50%,  #0652fb 50%, #163d94 200%);
+    background-position: -80px 0;
+    background-size: 200% 100%;
+    box-shadow: inset 0 0px 22px -8px #111;
+}
+.toggle--switch .toggle--btn, .toggle--switch .toggle--btn:before {
+  border-radius: 4px;
+}
+.toggle--switch .toggle--btn:before {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 26px;
+  border: 2px solid #202027;
+  background-image: linear-gradient(90deg, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
+  background-color: #6fa748;
+  background-size: 5px 5px;
+  text-indent: -100%;
+}
+.toggle--switch .toggle--feature {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 26px;
+}
+.toggle--switch .toggle--feature:before, .toggle--switch .toggle--feature:after {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.toggle--switch .toggle--feature:before {
+  content: attr(data-label-on);
+  left: -60%;
+}
+.toggle--switch .toggle--feature:after {
+  content: attr(data-label-off);
+  right: 6%;
+  
+}
+.toggle--switch .toggle--checkbox:checked + .toggle--btn {
+  background-position: 0 0;
+}
+.toggle--switch .toggle--checkbox:checked + .toggle--btn:before {
+  left: calc(100% - 32px);
+}
+.toggle--switch .toggle--checkbox:checked + .toggle--btn .toggle--feature:before {
+  left: 8%;
+}
+.toggle--switch .toggle--checkbox:checked + .toggle--btn .toggle--feature:after {
+  right: -60%;
+}
+
+
+/* =====================================================
+   Toggle - knob button style
+   ===================================================== */
+.toggle--knob .toggle--btn {
+  position: relative;
+  width: 75px;
+  height: 26px;
+  font-family: 'PT Sans', Sans Serif;
+  text-transform: uppercase;
+  color: #fff;
+  background: #80ff00;
+  box-shadow: inset 0 20px 40px -10px #4b4f5f;
+  border-radius: 40px;
+}
+.toggle--knob .toggle--btn:before {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 63%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f1f1f1;
+  box-shadow: 0 4px 10px 0 #999, inset 0 10px 10px 8px rgba(241, 241, 241, 0.6), inset 0 0 8px 0px #333, inset 0 0 0 13px #ccc, inset 0 0 0 14px #f1f1f1;
+  text-indent: -100%;
+}
+.toggle--knob .toggle--feature {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  height: 26px;
+  text-shadow: 0 1px 2px #666;
+}
+.toggle--knob .toggle--feature:before, .toggle--knob .toggle--feature:after {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.toggle--knob .toggle--feature:before {
+  content: attr(data-label-on);
+  left: 20%;
+}
+.toggle--knob .toggle--feature:after {
+  content: attr(data-label-off);
+  right: -60%;
+}
+.toggle--knob .toggle--checkbox:checked + .toggle--btn {
+  background: #a2a2a2;
+  box-shadow: inset 0 20px 40px -10px #7e7e7e;
+}
+.toggle--knob .toggle--checkbox:checked + .toggle--btn:before {
+  left: 0;
+}
+.toggle--knob .toggle--checkbox:checked + .toggle--btn .toggle--feature:before {
+  left: -60%;
+}
+.toggle--knob .toggle--checkbox:checked + .toggle--btn .toggle--feature:after {
+  right: 16%;
+}

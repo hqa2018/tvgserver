@@ -1,0 +1,327 @@
+/*青岛 研 锦 网络科技有限公司   版权所有*/
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+button,
+textarea,
+p,
+blockquote,
+th,
+td,
+form,
+pre {
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    color: #333;
+}
+
+body {
+    -webkit-font-feature-settings: 'kern' 1;
+    -moz-font-feature-settings: 'kern' 1;
+    -o-font-feature-settings: 'kern' 1;
+    text-rendering: geometricPrecision;
+    font-family: "Microsoft YaHei";
+}
+
+a:active,
+a:hover {
+    outline: 0
+}
+
+img {
+    display: inline-block;
+    border: none;
+    vertical-align: middle;
+}
+
+li {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+h1,
+h2,
+h3 {
+    font-size: 14px;
+    font-weight: 400;
+}
+
+h4,
+h5,
+h6 {
+    font-size: 100%;
+    font-weight: 400;
+}
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%;
+}
+
+input,
+button,
+textarea,
+select,
+optgroup,
+option {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    outline: 0;
+}
+
+pre {
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
+
+
+/** 滚动条 **/
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-button:vertical {
+    display: none;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+    background-color: rgba(14, 148, 234, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+::-webkit-scrollbar-thumb:vertical:hover {
+    background-color: rgba(0, 0, 0, .35);
+}
+
+::-webkit-scrollbar-thumb:vertical:active {
+    background-color: rgba(0, 0, 0, .38);
+}
+
+
+/*下拉框*/
+
+.select {
+    width: 1.6rem;
+    height: 0.4rem;
+    position: relative;
+    font-size: 0.18rem;
+    color: #cdddf7;
+    outline: none;
+}
+
+.select-div {
+    box-sizing: border-box;
+    width: 1.6rem;
+    height: 0.4rem;
+    line-height: 0.4rem;
+    border: 1px solid #0E94EA;
+    background: url(../images/arrow.png) 95% center no-repeat;
+    padding-left: 10px;
+    cursor: default;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #cdddf7;
+}
+
+.select-ul {
+    position: absolute;
+    width: 1.6rem;
+    top: 0.5rem;
+    left: 0;
+    z-index: 10;
+    display: none;
+}
+
+.select-ul.company {
+    height: 1.2rem;
+    overflow-y: auto;
+}
+
+.select-ul>li {
+    height: 0.4rem;
+    line-height: 0.4rem;
+    padding-left: 10px;
+    box-sizing: border-box;
+    background-color: rgba(14, 148, 234, 0.2);
+    cursor: default;
+    color: #cdddf7;
+}
+
+.select-ul>li.active,
+.select-ul>li:hover {
+    color: white;
+    background: #0e94eb;
+}
+
+.select-ul>li {
+    width: 1.6rem;
+}
+
+.data-box {
+    width: 4.9rem;
+    position: absolute;
+    margin: auto;
+    top: 0.42rem;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.chart-box {
+    position: absolute;
+    top: 0.42rem;
+    bottom: 0;
+    width: 90%;
+    margin: auto;
+    left: 0;
+    right: 0;
+    height: auto;
+}
+
+.container-flex {
+    width: 100%;
+    height: 100%;
+    background: url(../images/index_bg.png) left top no-repeat;
+    background-size: 100% 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    outline: none;
+}
+
+.box-left {
+    width: 28%;
+    height: 100%;
+    background: url(../images/line_img.png) top right repeat-y;
+}
+
+.left-top {
+    width: 100%;
+    height: 20.4%;
+    position: relative;
+}
+
+.left-top>.current-num {
+    width: 4.9rem;
+    height: 1.8rem;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: url(../images/border_bg01.png) top left no-repeat;
+    background-size: 100% 100%;
+}
+
+.current-num>div {
+    width: 100%;
+    height: 0.8rem;
+    line-height: 0.8rem;
+    text-align: center;
+    background: url(../images/title_bg01.png) center center no-repeat;
+    font-size: 0.2rem;
+    color: #0e94ea;
+    background-size: 1.8rem 0.25rem;
+    font-weight: 900;
+}
+
+.current-num>p {
+    font-size: 0.46rem;
+    text-align: center;
+    color: white;
+}
+
+.left-center {
+    width: 100%;
+    height: 37%;
+    position: relative;
+}
+
+.pie-chart>div {
+    float: left;
+    width: 50%;
+    height: 100%;
+    position: relative;
+}
+
+.pie-data {
+    height: 2.25rem;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    flex-flow: row wrap;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.pie-data p {
+    width: 100%;
+    height: 0.45rem;
+    line-height: 0.45rem;
+    font-size: 0.2rem;
+    color: #cdddf7;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    cursor: default;
+}
+
+.pie-data p>span {
+    width: 0;
+    flex-grow: 1;
+    margin: 0 5px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pie-data p>.pie-number {
+    flex-grow: 2;
+}
+

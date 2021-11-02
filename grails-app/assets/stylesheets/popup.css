@@ -1,0 +1,25 @@
+/*弹出窗样式*/
+.table_info{
+    border: 2px solid #3cc9ec;
+    position: absolute;
+    z-index: 99;
+    left: 5px;
+    top: 5px;
+    display: none;
+    background-color: #0d2a45;
+    color: white;
+    text-align: center;
+}
+
+.table_info button{
+    cursor: pointer;
+    background: #747577;
+    margin: 5px 0;
+    border: 0px solid #fff;
+    padding: 3px 10px;
+    color: #fff;
+}
+
+.table_info input{
+    width: 100%;
+}
