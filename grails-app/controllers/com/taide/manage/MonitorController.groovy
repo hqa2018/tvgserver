@@ -12,6 +12,8 @@ class MonitorController {
 
     def dataManagerService
 
+    //======================页面视图=======================//
+
     def index() { }
 
     def details() {
@@ -36,23 +38,47 @@ class MonitorController {
 
     }
 
-//    def test(){
-//        def result = dataManagerService.updateDevTriggerStatus()
-//        render result as JSON
-//    }
-
     def popup(){
 
     }
 
+    //======================后台操作=======================//
+
     /**
-     * 控制操作
+     * 更新基础参数
+     * */
+    def updateBaseInfoData = {
+        if(dataManagerService.updateParData()){
+            render(1)
+        }else{
+            render(0)
+        }
+    }
+
+    /**
+     * 更新实时监控数据
+     * */
+    def updateMoStatusData = {
+        if(dataManagerService.updateMonDataStatus()){
+            render(1)
+        }else {
+            render(0)
+        }
+    }
+
+    /**
+     * 重启设备
+     * 文件名：台网.台站代码.reoot
      * */
     def restart = {
         FileUtil.writeTxtFile(DataManager.ROOT_PATH+"SetPar/"+params["pointid"]+".reoot","",false);
         render("ok")
     }
 
+    /**
+     * 保存参数
+     * 文件名：台网.台站代码.par
+     * */
     def savepar = {
         String content = ""
 //        params.each { key,value->
@@ -91,13 +117,19 @@ class MonitorController {
         content += "ServerIP2="+params["ServerIP2"]+"\r\n"
         content += "ServerPort1="+params["ServerPort1"]+"\r\n"
         content += "ServerPort2="+params["ServerPort2"]+"\r\n"
-
-        FileUtil.writeTxtFile(DataManager.ROOT_PATH+"SetPar/"+params["NetCode"]+"."+params["StaCode"]+".par",content,false);
-//        FileUtil.ReadParamFile()
-        render("ok")
+        def result = FileUtil.writeTxtFile(DataManager.ROOT_PATH+"SetPar/"+params["NetCode"]+"."+params["StaCode"]+".par",content,false);
+        //保存成功后更新基础数据缓存
+        if(result){
+            dataManagerService.updateBaseInfoData()
+            render(1)
+        }else{
+            render(0)
+        }
     }
 
-    /*保存单个报警参数*/
+    /**
+     * 保存报警参数
+     * */
     def saveAlertConfig = {
         if(params.pointid == "all"){
             Map devData = DataManager.getInstance().getCacheItems()
@@ -187,10 +219,8 @@ class MonitorController {
         }
     }
 
+    //======================数据接口=======================//
 
-    /**
-     * 数据接口
-     * */
     //获取状态数据
     def queryrecord = {
         response.addHeader("Access-Control-Allow-Origin", "*");
@@ -488,4 +518,35 @@ class MonitorController {
 //        dataManagerService.gethistorydata();
         render("success")
     }
+
+
+    /**
+     * 文件下载
+     */
+    def fileDownload = {
+//        def filePath = params.filePath  //文件路径
+        def filePath = "D:/tia.ini"
+//        def fileName = encode(params.fileName)  //文件名
+        def fileName = "tia.ini"
+        response.setHeader("Content-disposition", "attachment; filename=" + fileName)
+        response.contentType = "application/x-rarx-rar-compressed"
+        def out = response.outputStream
+        def inputStream = new FileInputStream(filePath)
+        byte[] buffer = new byte[1024]
+        int i = -1
+        while ((i = inputStream.read(buffer)) != -1) {
+            out.write(buffer, 0, i)
+        }
+        out.flush()
+        out.close()
+        inputStream.close()
+    }
+
+    /**
+     * 字符编码
+     */
+    final def encode(String value,String charSet){
+        URLEncoder.encode(value, charSet)
+    }
+
 }

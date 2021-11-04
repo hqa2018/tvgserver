@@ -18,20 +18,20 @@ class DataManagerService {
      * 定时读取参数文件并储存
      */
     def updateParData(){
+        def result = false;
         File file = new File(DataManager.ROOT_PATH+"Par");
 //        println("readTxtFromPar"+new Date().toString()+":"+DataManager.ROOT_PATH+"Par")
         if(file.exists() && file.isDirectory()){
             File[] childFileArray = file.listFiles();
             if (childFileArray.length != 0){
+                result = true;
                 for (int i = 0; i < childFileArray.length; i++) {
                     String fileName = childFileArray[i].getName();
                     if(fileName != "." && fileName != ".."){
                         String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
                         if(suffix == "txt"){
-                            String prefix = fileName.split("\\.")[0];
-                            String deviceNumber = prefix.substring(prefix.length()-5);
-//                            println(childFileArray[i]);
-//                            println(prefix)
+                            String devcode = fileName.split("\\.")[0];
+//                            String deviceNumber = prefix.substring(prefix.length()-5);
                             Map<String,String> param = FileUtil.ReadParamFile(childFileArray[i].getAbsolutePath(),"gbk");
                             StationDev stadev = new StationDev();
                             stadev.NetCode = param.get("NetCode");
@@ -65,7 +65,7 @@ class DataManagerService {
                             stadev.ServerIP2 = param.get("ServerIP2");
                             stadev.ServerPort1 = param.get("ServerPort1");
                             stadev.ServerPort2 = param.get("ServerPort2");
-                            DataManager.getInstance().putCacheItem(prefix,stadev);
+                            DataManager.getInstance().putCacheItem(devcode,stadev);
 //                            FileUtil.ReadParamFile("");
 //                            String content = FileUtil.ReadFileContent(childFileArray[i].getAbsolutePath(),"gbk");
                         }
@@ -74,12 +74,13 @@ class DataManagerService {
             }
         }
 
-        Map devData = DataManager.getInstance().getCacheItems()
+        return result;
+        /*Map devData = DataManager.getInstance().getCacheItems()
         for(String key : devData.keySet()){
             println("key:"+key)
             StationDev param = devData.get(key);
-//            println(param.StaCode)
-        }
+            println(param.StaCode)
+        }*/
     }
 
     //更新实时监测状态数据
