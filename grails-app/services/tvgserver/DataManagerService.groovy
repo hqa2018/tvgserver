@@ -3,6 +3,7 @@ package tvgserver
 import com.taide.entity.StationDev
 import com.taide.manage.DataManager
 import com.taide.system.AlarmConifg
+import com.taide.system.SystemConfig
 import com.taide.util.FileUtil
 import com.taide.util.NumberUtils
 import grails.gorm.transactions.Transactional
@@ -14,12 +15,21 @@ class DataManagerService {
 
     }
 
+    def initSystem(){
+        println("初始化系统参数")
+        if(SystemConfig.list().size()){
+            def systemConfig = SystemConfig.list().get(0)
+            DataManager.ROOT_PATH = systemConfig.rootPath ? systemConfig.rootPath : DataManager.ROOT_PATH
+        }
+        updateParData()
+    }
+
     /**
      * 定时读取参数文件并储存
      */
     def updateParData(){
         def result = false;
-        File file = new File(DataManager.ROOT_PATH+"Par");
+        File file = new File(DataManager.ROOT_PATH+"/data/Par");
 //        println("readTxtFromPar"+new Date().toString()+":"+DataManager.ROOT_PATH+"Par")
         if(file.exists() && file.isDirectory()){
             File[] childFileArray = file.listFiles();
@@ -73,7 +83,6 @@ class DataManagerService {
                 }
             }
         }
-
         return result;
         /*Map devData = DataManager.getInstance().getCacheItems()
         for(String key : devData.keySet()){
@@ -96,7 +105,7 @@ class DataManagerService {
         Map devData = DataManager.getInstance().getCacheItems();
         List<Map<String,Object>> returnList = new LinkedList<Map<String,Object>>();
         result["data"] = returnList
-        String path = DataManager.ROOT_PATH + "MonStatus.txt";
+        String path = DataManager.ROOT_PATH + "/data/MonStatus.txt";
         String respone = FileUtil.ReadFileContent(path, "utf-8");
         if (respone != null && respone != "") {
             for(String key : devData.keySet()){
@@ -208,11 +217,11 @@ class DataManagerService {
             }
         }
 
-        DataManager.curMonCountData.put("normal",normal)
-        DataManager.curMonCountData.put("alarm",alarm)
-        DataManager.curMonCountData.put("error",error)
-        DataManager.curMonCountData.put("count",DataManager.getInstance().getSize())
-
+//        println("DataManager.curMonDataList:"+DataManager.curMonDataList.size())
+//        DataManager.curMonCountData.put("normal",normal)
+//        DataManager.curMonCountData.put("alarm",alarm)
+//        DataManager.curMonCountData.put("error",error)
+//        DataManager.curMonCountData.put("count",DataManager.getInstance().getSize())
 
         return result
     }
@@ -230,7 +239,7 @@ class DataManagerService {
 //        result["data"] = new ArrayList<>();
         List<Map<String,Object>> returnList = new LinkedList<Map<String,Object>>();
         result["data"] = returnList
-        String path = DataManager.ROOT_PATH + "MonStatus.txt";
+        String path = DataManager.ROOT_PATH + "/data/MonStatus.txt";
         println("path:"+path)
         String respone = FileUtil.ReadFileContent(path, "utf-8");
 //        println("respone="+respone)
@@ -353,10 +362,10 @@ class DataManagerService {
      */
     def checkTvgRootPath(){
         boolean flag = false;
-        if(FileUtil.isFileExists(DataManager.ROOT_PATH+"Par")){
+        if(FileUtil.isFileExists(DataManager.ROOT_PATH+"/data/Par")){
             flag = true
         }
-        println("RootPath:"+flag);
+//        println("RootPath:"+flag);
         return flag;
     }
 

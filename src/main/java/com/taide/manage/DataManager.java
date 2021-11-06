@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DataManager {
 //    public static String ROOT_PATH = "D:/TVG/data/";
-    public static String ROOT_PATH = "D:/Download/data/";
+    public static String ROOT_PATH = "D:/Download";
     public static LinkedList curMonDataList = new LinkedList();
     public static Map<Object, Object> curMonCountData;
     public static Map<Object, Object> cacheMonStatusData;

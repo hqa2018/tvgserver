@@ -12,7 +12,9 @@ class TvgDataJob {
     def execute() {
         // execute job
 //        println("job:"+new Date().getTime());
-        dataManagerService.updateParData();     //更新基础参数
+//        dataManagerService.updateParData();     //更新基础参数
+        //定时更新实时监测状态数据
+        dataManagerService.updateMonDataStatus();
         dataManagerService.checkTvgRootPath();  //更新目录状态
 
     }

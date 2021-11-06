@@ -33,6 +33,7 @@ function fetchBaseInfo() {
     });
     $.ajaxSettings.async = true;
     $("#startTime").val(TimeFrameUtil.format(new Date(),"yyyy-MM-dd"))
+    $("#startTime").val("2021-08-29")
     mdate = $("#startTime").val();
 }
 
@@ -46,17 +47,6 @@ function fetchMonitorData() {
 }
 
 function fetchTrigerData() {
-    //滚动
-    //原理：把marquee下面的子盒子都复制一遍 加入到marquee中
-    //      然后动画向上滚动，滚动到一半重新开始滚动
-    //因为选取的是两个marquee  所以要遍历
-    $('.monitor .marquee').each(function (index, dom) {
-        //将每个 的所有子级都复制一遍
-        var rows = $(dom).children().clone();
-        //再将新的到的加入原来的
-        $(dom).append(rows);
-    });
-
     $.getJSON("../monitor/getTrigerData",{pointid:POINT_ID,date:mdate},function (result) {
         console.log("TrigerData------------------")
         for(var i=0;i<result.length;i++){
@@ -65,7 +55,34 @@ function fetchTrigerData() {
     });
 }
 
+function updateWaveform() {
+    $.getJSON("../monitor/getMonStoreData",{pointid:POINT_ID,date:mdate},function (result) {
+        if(result["time"]){
+            for(var i=4;i<=11;i++){
+                echarts_waveform(result["ch"+i],result["time"],"monchart"+i,parseChName((i-3)));
+            }
+        }else{
+            alert(mdate+"无历史数据");
+        }
+
+    });
+}
+
 $(function () {
+    //日期控件
+    layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#startTime',
+            done: function(value, date){
+                alert("选中："+value)
+                mdate = value;
+                updateWaveform();
+                // layer.alert('你选择的日期是：' + value + '<br>获得的对象是' + JSON.stringify(date));
+            }
+        });
+    });
+
     fetchBaseInfo();
     fetchMonitorData();
     fetchTrigerData();
@@ -78,127 +95,7 @@ $(function () {
             }
         });
     }
-    function echarts_waveform(ydata,xdata,id,title) {
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById(id));
-        option = {
-            title: [
-                {
-                    left: 'center',
-                    text: title,
-                    textStyle: {
-                        color: '#0184d5',
-                        fontSize: '12',
-                    }
-                }],
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    lineStyle: {
-                        color: '#dddc6b'
-                    }
-                }
-            },
-            /*legend: {
-                top: '0%',
-                data: ['点到', '未点到'],
-                textStyle: {
-                    color: 'rgba(255,255,255,.5)',
-                    fontSize: '12',
-                }
-            },*/
-            grid: {
-                left: '10',
-                top: '30',
-                right: '10',
-                bottom: '10',
-                containLabel: true
-            },
-            xAxis: [{
-                type: 'category',
-                boundaryGap: false,
-                axisLabel: {
-                    textStyle: {
-                        color: "rgba(255,255,255,.6)",
-                        fontSize: 12,
-                    },
-                },
-                axisLine: {
-                    lineStyle: {
-                        color: 'rgba(255,255,255,.2)'
-                    }
-                },
-                data: xdata
-            }, {
-                axisPointer: {show: false},
-                axisLine: {show: false},
-                position: 'bottom',
-                offset: 20,
-            }],
-            yAxis: [{
-                type: 'value',
-                scale: true,
-                axisTick: {show: false},
-                axisLine: {
-                    lineStyle: {
-                        color: 'rgba(255,255,255,.1)'
-                    }
-                },
-                axisLabel: {
-                    textStyle: {
-                        color: "rgba(255,255,255,.6)",
-                        fontSize: 12,
-                    },
-                },
-                splitLine: {
-                    lineStyle: {
-                        color: 'rgba(255,255,255,.1)'
-                    }
-                }
-            }],
-            series: [
-                {
-                    name: '值',
-                    type: 'line',
-                    smooth: true,
-                    symbol: 'circle',
-                    symbolSize: 5,
-                    showSymbol: false,
-                    lineStyle: {
-                        normal: {
-                            color: '#0184d5',
-                            width: 2
-                        }
-                    },
-                    /*areaStyle: {
-                        normal: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                offset: 0,
-                                color: 'rgba(1, 132, 213, 0.4)'
-                            }, {
-                                offset: 0.8,
-                                color: 'rgba(1, 132, 213, 0.1)'
-                            }], false),
-                            shadowColor: 'rgba(0, 0, 0, 0.1)',
-                        }
-                    },*/
-                    itemStyle: {
-                        normal: {
-                            color: '#0184d5',
-                            borderColor: 'rgba(221, 220, 107, .1)',
-                            borderWidth: 12
-                        }
-                    },
-                    data: ydata
-                },
-            ]
-        };
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-        /*window.addEventListener("resize", function () {
-            myChart.resize();
-        });*/
-    }
+
 
     function echarts_6() {
         // 基于准备好的dom，初始化echarts实例
@@ -345,6 +242,128 @@ $(function () {
     }
 
 })
+
+function echarts_waveform(ydata,xdata,id,title) {
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById(id));
+    option = {
+        title: [
+            {
+                left: 'center',
+                text: title,
+                textStyle: {
+                    color: '#0184d5',
+                    fontSize: '12',
+                }
+            }],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                lineStyle: {
+                    color: '#dddc6b'
+                }
+            }
+        },
+        /*legend: {
+            top: '0%',
+            data: ['点到', '未点到'],
+            textStyle: {
+                color: 'rgba(255,255,255,.5)',
+                fontSize: '12',
+            }
+        },*/
+        grid: {
+            left: '10',
+            top: '30',
+            right: '10',
+            bottom: '10',
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'category',
+            boundaryGap: false,
+            axisLabel: {
+                textStyle: {
+                    color: "rgba(255,255,255,.6)",
+                    fontSize: 12,
+                },
+            },
+            axisLine: {
+                lineStyle: {
+                    color: 'rgba(255,255,255,.2)'
+                }
+            },
+            data: xdata
+        }, {
+            axisPointer: {show: false},
+            axisLine: {show: false},
+            position: 'bottom',
+            offset: 20,
+        }],
+        yAxis: [{
+            type: 'value',
+            scale: true,
+            axisTick: {show: false},
+            axisLine: {
+                lineStyle: {
+                    color: 'rgba(255,255,255,.1)'
+                }
+            },
+            axisLabel: {
+                textStyle: {
+                    color: "rgba(255,255,255,.6)",
+                    fontSize: 12,
+                },
+            },
+            splitLine: {
+                lineStyle: {
+                    color: 'rgba(255,255,255,.1)'
+                }
+            }
+        }],
+        series: [
+            {
+                name: '值',
+                type: 'line',
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 5,
+                showSymbol: false,
+                lineStyle: {
+                    normal: {
+                        color: '#0184d5',
+                        width: 2
+                    }
+                },
+                /*areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(1, 132, 213, 0.4)'
+                        }, {
+                            offset: 0.8,
+                            color: 'rgba(1, 132, 213, 0.1)'
+                        }], false),
+                        shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    }
+                },*/
+                itemStyle: {
+                    normal: {
+                        color: '#0184d5',
+                        borderColor: 'rgba(221, 220, 107, .1)',
+                        borderWidth: 12
+                    }
+                },
+                data: ydata
+            },
+        ]
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    /*window.addEventListener("resize", function () {
+        myChart.resize();
+    });*/
+}
 
 
 

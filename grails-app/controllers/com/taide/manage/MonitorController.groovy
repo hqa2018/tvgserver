@@ -2,6 +2,7 @@ package com.taide.manage
 
 import com.taide.entity.StationDev
 import com.taide.system.AlarmConifg
+import com.taide.system.SystemConfig
 import com.taide.util.FileUtil
 import com.taide.util.NumberUtils
 import grails.converters.JSON
@@ -34,11 +35,15 @@ class MonitorController {
 
     }
 
-    def mapview1 () {
+    def popup(){
 
     }
 
-    def popup(){
+    def devdata(){
+
+    }
+
+    def list(){
 
     }
 
@@ -71,7 +76,7 @@ class MonitorController {
      * 文件名：台网.台站代码.reoot
      * */
     def restart = {
-        FileUtil.writeTxtFile(DataManager.ROOT_PATH+"SetPar/"+params["pointid"]+".reoot","",false);
+        FileUtil.writeTxtFile(DataManager.ROOT_PATH+"/setpar/"+params["pointid"]+".reoot","",false);
         render("ok")
     }
 
@@ -117,7 +122,7 @@ class MonitorController {
         content += "ServerIP2="+params["ServerIP2"]+"\r\n"
         content += "ServerPort1="+params["ServerPort1"]+"\r\n"
         content += "ServerPort2="+params["ServerPort2"]+"\r\n"
-        def result = FileUtil.writeTxtFile(DataManager.ROOT_PATH+"SetPar/"+params["NetCode"]+"."+params["StaCode"]+".par",content,false);
+        def result = FileUtil.writeTxtFile(DataManager.ROOT_PATH+"/setpar/"+params["NetCode"]+"."+params["StaCode"]+".par",content,false);
         //保存成功后更新基础数据缓存
         if(result){
             dataManagerService.updateBaseInfoData()
@@ -219,13 +224,40 @@ class MonitorController {
         }
     }
 
+    /**
+     * 设置系统参数
+     * */
+    def setSystemConfig = {
+        def systemParamInstance
+        def systemParamInstanceList =  SystemConfig.list();
+        if(systemParamInstanceList && systemParamInstanceList.size() > 0)
+            systemParamInstance = systemParamInstanceList.get(0)
+        else
+            systemParamInstance = new SystemConfig(params)
+        systemParamInstance.properties = params
+
+        if (systemParamInstance.save(flush: true)) {
+//            flash.message = "successed update params!"
+//            redirect(action: "systemparam")
+            render("success")
+        }
+        else {
+            render(view: "create", model: [systemParamInstance: systemParamInstance])
+        }
+    }
+
     //======================数据接口=======================//
+
+    //获取状态数据接口
+    def fetchMonStatusData = {
+        render DataManager.curMonDataList as JSON
+    }
 
     //获取状态数据
     def queryrecord = {
         response.addHeader("Access-Control-Allow-Origin", "*");
         List<Map<String,Object>> returnList = new LinkedList<Map<String,Object>>();
-        String path = DataManager.ROOT_PATH + "MonStatus.txt";
+        String path = DataManager.ROOT_PATH + "/data/MonStatus.txt";
 //        println("path:"+path)
         String respone = FileUtil.ReadFileContent(path, "utf-8");
 //        println("respone="+respone)
@@ -407,7 +439,7 @@ class MonitorController {
         if(params.stationid.split(".").size() > 1){
             def netcode = params.stationid.split(".")[0];
             def stacode = params.stationid.split(".")[1];
-            def stapath = DataManager.ROOT_PATH+netcode+"/"+stacode+"/monitor";
+            def stapath = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/monitor";
             List<File> fileList = FileUtil.listFilesInDir(stapath);
         }else{
             render("stationid:参数错误")
@@ -424,8 +456,8 @@ class MonitorController {
         println "datestr="+datestr
         def netcode = params.pointid.split("\\.")[0]
         def stacode = params.pointid.split("\\.")[1]
-        /*[[1635177600000,"-100.000000"],[1635177660000,"-100.000000"]]*/
-        String path = DataManager.ROOT_PATH+"/"+netcode+"/"+stacode+"/monitor/20210829.txt"
+//        datestr = "20210829"
+        String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/monitor/"+datestr+".txt"
 //        println(path)
         ArrayList list = FileUtil.readFileContent(path,"utf-8");
         def datamap = [:]
@@ -463,7 +495,7 @@ class MonitorController {
             month = params.date.split("-")[1]
             day = params.date.split("-")[2]
         }*/
-        String path = DataManager.ROOT_PATH+"/"+netcode+"/"+stacode+"/"+year+"/"+month+"-"+day+"/Triger.txt"
+        String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/"+year+"/"+month+"-"+day+"/Triger.txt"
         ArrayList list = FileUtil.readFileContent(path,"utf-8");
         ArrayList result = new ArrayList();
         for(int i=0;i<list.size();i++){
@@ -493,7 +525,7 @@ class MonitorController {
         }*/
         ArrayList result = new ArrayList();
         for(int d=1;d<31;d++){
-            String path = DataManager.ROOT_PATH+"/"+netcode+"/"+stacode+"/"+year+"/"+month+"-"+d+"/Triger.txt"
+            String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/"+year+"/"+month+"-"+d+"/Triger.txt"
             if(FileUtil.isFileExists()){
                 ArrayList list = FileUtil.readFileContent(path,"utf-8");
                 def obj = [:]
@@ -504,6 +536,8 @@ class MonitorController {
         }
         render(result as JSON)
     }
+
+    //======================测试调试=======================//
 
 
     def test = {
@@ -517,6 +551,10 @@ class MonitorController {
         }
 //        dataManagerService.gethistorydata();
         render("success")
+    }
+
+    def getRootPath = {
+        render DataManager.ROOT_PATH
     }
 
 
