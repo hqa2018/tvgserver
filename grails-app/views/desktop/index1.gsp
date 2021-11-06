@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><g:pageTitle default="Grails"/>测试git提交</title>
+    <title><g:pageTitle default="Grails"/>测试Git直接push操作</title>
     <asset:stylesheet src="Desktop/css/style.css?t=2"/>
     <asset:stylesheet src="Desktop/css/nprogress.css"/>
 </head>
