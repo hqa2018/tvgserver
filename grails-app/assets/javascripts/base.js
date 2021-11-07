@@ -1,30 +1,33 @@
 var startColor = ['#2fda07', '#f86363',  '#909090'];
 var borderStartColor = ['#24bc00', '#ec3c3c',  '#686868'];
+var myChart
 
 //入库量占比，带边框效果的饼图
 function chart1() {
     //data 为模拟数据
     var data = [{
         name: '正常',
-        value: 2,
+        value: statusArr[0],
         percent: '30.8721',
     }, {
         name: '异常',
-        value: 1,
+        value: statusArr[1],
         percent: '34.076',
     }, {
         name: '中断',
-        value: 1,
+        value: statusArr[2],
         percent: '35.49',
     }];
-    var myChart = echarts.init(document.getElementById('pie'));
+    myChart = echarts.init(document.getElementById('pie'));
     window.addEventListener('resize', function () {
         myChart.resize();
     });
 
+    $('.pie-data').empty();
     var str = '';
     for (var i = 0; i < data.length; i++) {
-        str += '<p><span><i class="legend" style="background:' + startColor[i] + '"></i></span>' + data[i].name + '<span class="pie-number" style="color:' + startColor[i] + '">' + data[i].value + '</span>' + Number(data[i].percent).toFixed(2) + '%</p>';
+        str += '<p><span><i class="legend" style="background:' + startColor[i] + '"></i></span>' + data[i].name + '<span class="pie-number" style="color:' + startColor[i] + '">' + data[i].value + '</span>' + '</p>';
+        // str += '<p><span><i class="legend" style="background:' + startColor[i] + '"></i></span>' + data[i].name + '<span class="pie-number" style="color:' + startColor[i] + '">' + data[i].value + '</span>' + Number(data[i].percent).toFixed(2) + '%</p>';
     }
 
     $('.pie-data').append(str);
@@ -50,12 +53,14 @@ function chart1() {
 
     var RealData = [];
     var borderData = [];
+
     data.map((item, index) => {
         var newobj = deepCopy(item);
         var newobj1 = deepCopy(item);
         RealData.push(newobj);
         borderData.push(newobj1);
     });
+
     RealData.map((item, index) => {
         item.itemStyle = {
             normal: {
@@ -165,4 +170,6 @@ function chart1() {
 }
 
 chart1()
+
+
 

@@ -15,7 +15,11 @@
 <div id="desktop">
     <div class="lantern"></div>
     <ul class="list">
-        <li data-href="lasteq/first.html"><asset:image src="Desktop/images/td-icon4.png"/><span>全球地震</span></li>
+        <li data-href="../monitor/realtime"><asset:image src="Desktop/images/td-icon22.png"/><span>实时监控</span></li>
+        <li data-href="../monitor/mapview"><asset:image src="Desktop/images/td-icon4.png"/><span>地图监控</span></li>
+        <li data-href="../monitor/search"><asset:image src="Desktop/images/td-icon29.png"/><span>数据查询</span></li>
+        <li data-href="../monitor/devdata"><asset:image src="Desktop/images/td-icon42.png"/><span>历史波形</span></li>
+        <li data-href="../monitor/config"><asset:image src="Desktop/images/td-icon3.png"/><span>参数设置</span></li>
     </ul>
     <div class="date">
         <div class="date-wrapper">

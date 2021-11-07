@@ -258,7 +258,7 @@ class MonitorController {
         response.addHeader("Access-Control-Allow-Origin", "*");
         List<Map<String,Object>> returnList = new LinkedList<Map<String,Object>>();
         String path = DataManager.ROOT_PATH + "/data/MonStatus.txt";
-//        println("path:"+path)
+        println("path:"+path)
         String respone = FileUtil.ReadFileContent(path, "utf-8");
 //        println("respone="+respone)
         Map devData = DataManager.getInstance().getCacheItems()
@@ -375,6 +375,23 @@ class MonitorController {
         render returnList as JSON;
     }
 
+    /*获取设备列表信息*/
+    def getdevlist = {
+        def result = new ArrayList();
+        Map devData = DataManager.getInstance().getCacheItems()
+        for(String key : devData.keySet()){
+            StationDev stadev = devData.get(key);
+            def obj = [:]
+            obj["devcode"] = key
+            obj["pointid"] = stadev.NetCode+"."+stadev.StaCode
+            obj["NetCode"] = stadev.NetCode
+            obj["StaCode"] = stadev.StaCode
+            obj["LocID"] = stadev.LocID
+            obj["ChCode"] = stadev.ChCode
+            result.add(obj)
+        }
+        render result as JSON
+    }
 
     def getdevinfo = {
         Map devData = DataManager.getInstance().getCacheItems()

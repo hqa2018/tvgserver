@@ -11,6 +11,8 @@
     <script src="${request.getContextPath()}/static/js/echarts.min.js"></script>
     <script src="${request.getContextPath()}/static/js/macarons.js"></script>
     <script src="${request.getContextPath()}/static/js/countUp.js"></script>
+    <style>
+    </style>
 </head>
 <body>
 <div class="first-screen root-wrap data-content">
@@ -25,6 +27,7 @@
         <ul>
             <li id="editDev" class="li_scssz">参数设置</li>
             <li id="alertDev" class="alert_scssz">报警设置</li>
+            <li id="waveBtn" class="li_scssz">波形数据</li>
             <li class="rebootBtn">设备重启</li>
         </ul>
     </div>
@@ -53,26 +56,25 @@
     </div>
     <div class="aside-right clearfix fl">
         <div class="pie clearfix">
-            <div class="pie1 fl">
-                <h3>状态统计</h3>
-                <div class="chart-box pie-chart">
-                    <div id="pie"></div>
-                    <div>
-                        <div class="pie-data">
+            <div class="chart-box pie-chart">
+                <div id="pie"></div>
+                <div>
+                    <div class="pie-data">
 
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="area-rank">
-            <h3></h3>
-            <div class="con">
+            <h3>事件触发排行</h3>
+            <div class="con" id="echart1">
+%{--                <div class="allnav" id="echart1"></div>--}%
             </div>
         </div>
         <div class="trend">
-            <h3></h3>
-            <div id="trendBar1" style="width: 100%;height: 80%;"></div>
+            <h3>近一个月触发记录</h3>
+            <div class="con" id="echart4" style="height: calc(100% - 35px);"></div>
+%{--            <div id="trendBar1" style="width: 100%;height: 80%;"></div>--}%
         </div>
     </div>
 </div>

@@ -756,8 +756,9 @@ h3 {
 
 .mainout .aside-right .area-rank h3 {
 	height: 24%;
-	padding-top: 10%;
-	margin-left: 5%
+	padding-top: 3%;
+	margin-left: 12%;
+	font-size: 1.2rem;
 }
 
 .mainout .aside-right .area-rank .con {
@@ -934,9 +935,10 @@ h3 {
 }
 
 .mainout .aside-right .trend h3 {
-	height: 20%;
-	padding-top: 5%;
-	margin-left: 5%
+	height: 24%;
+	padding-top: 3%;
+	margin-left: 12%;
+	font-size: 1.2rem;
 }
 
 .mainout .aside-right .con_link {
@@ -1175,7 +1177,7 @@ h3 {
 
 /*饼图样式*/
 .pie-data {
-	height: 2.25rem;
+	height: 5.25rem;
 	position: absolute;
 	margin: auto;
 	top: 0;
@@ -1191,9 +1193,9 @@ h3 {
 
 .pie-data p {
 	width: 100%;
-	height: 0.45rem;
-	line-height: 0.45rem;
-	font-size: 0.2rem;
+	height: 1.45rem;
+	line-height: 1.45rem;
+	font-size: 1.2rem;
 	color: #cdddf7;
 	display: flex;
 	flex-flow: row nowrap;

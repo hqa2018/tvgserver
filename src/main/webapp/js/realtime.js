@@ -107,7 +107,10 @@ $(document).ready(function(){
     initAlarmPop();
     initAlarmSetting();
     // chart1();
+    echarts_1();
+    echarts_4();
 
+    updateStationData();
     setInterval(updateStationData, 1000*60);    //定时1分钟加载数据
     // setInterval(refreshPage, 5 * 60 * 1000);    //定时5分钟刷新页面
 
@@ -199,7 +202,7 @@ function alarmHandle(alarmList){
     for(var i=0;i<alarmList.length;i++){
         var alarmobj = alarmList[i]
         var sta_code = alarmobj.stacode.split(".")[1]
-        console.log("content="+alarmobj.content)
+        // console.log("content="+alarmobj.content)
         closeSta = alarmobj.stacode
         html += alarmobj.content
     }
@@ -264,7 +267,7 @@ function initInfo() {
                     if(j==1){
                         ch_val = parseGSPStatus(alertvalue["ch"+j])
                     }
-                    console.log("ch_val="+ch_val)
+                    // console.log("ch_val="+ch_val)
                     if(j>3)
                         ch_val = Number(alertvalue["ch"+j]).toFixed(2)
                     if(resp[i].datatime == "NULL"){
@@ -334,6 +337,7 @@ function initInfo() {
  * 定时更新数据
  */
 function updateStationData() {
+    console.log("updateStationData----")
     //获取par文件参数内容
     $.ajax({
         type: "GET",
@@ -383,7 +387,7 @@ function updateStationData() {
                             ch_val = parseGSPStatus(ch_val)
                         }
                         $("#" + stacode + "_ch" + n).text(ch_val);
-                        console.log("ch"+n+"_status:"+staint["ch"+n+"_status"])
+                        // console.log("ch"+n+"_status:"+staint["ch"+n+"_status"])
                         if(staint["ch"+n+"_status"] === "0"){
                             alarm_trig = true;
                             $("#" + stacode + "_ch" + n).attr("class","text-danger")
@@ -394,7 +398,7 @@ function updateStationData() {
 
                     //触发报警弹出窗
                     if(alarm_trig){
-                        console.log("报警台站:"+staint.pointid);
+                        // console.log("报警台站:"+staint.pointid);
                         // alarmtext += $("#"+staint.pointid).prop("outerHTML").allReplace(stacode+"_",stacode+"-");
                         var pointid = staint.pointid.replace(".","_")
                         alarmtext += $("#"+pointid).prop("outerHTML");
@@ -417,12 +421,14 @@ function updateStationData() {
                 alarmHandle(alarmList)
             }
 
+            console.log("successcount:"+successcount)
+
             //饼图更新
             var failcount = stacount - warncount - successcount
             if (statusArr.toString() != [successcount, warncount, failcount].toString()) {
                 statusArr = [successcount, warncount, failcount];
-
-                var option = pieChart.getOption();
+                chart1();
+                /*var option = pieChart.getOption();
                 var piedata = []
                 var colordata = []
 
@@ -442,7 +448,7 @@ function updateStationData() {
                 //状态饼图
                 option.series[0].data = piedata;
                 option.series[0].color = colordata;
-                pieChart.setOption(option);
+                pieChart.setOption(option);*/
                 //console.info("update pie ="+statusArr)
             }
 
@@ -451,170 +457,6 @@ function updateStationData() {
 }
 
 //加载图标
-function chart1() {
-    //data 为模拟数据
-    var data = [{
-        name: '正常',
-        value: 10,
-        percent: '30.8721',
-    }, {
-        name: '异常',
-        value: 5,
-        percent: '34.076',
-    }, {
-        name: '中断',
-        value: 1,
-        percent: '35.49',
-    }];
-    var myChart = echarts.init(document.getElementById('pie'));
-    // var myChart1 = echarts.init(document.getElementById('pie1'));
-    window.addEventListener('resize', function () {
-        myChart.resize();
-        // myChart1.resize();
-    });
-
-    var str = '';
-    for (var i = 0; i < data.length; i++) {
-        str += '<p><span><i class="legend" style="background:' + startColor[i] + '"></i></span>' + data[i].name + '<span class="pie-number" style="color:' + startColor[i] + '">' + data[i].value + '</span>' + Number(data[i].percent).toFixed(2) + '%</p>';
-    }
-
-    $('.pie-data').append(str);
-
-
-    function deepCopy(obj) {
-        if (typeof obj !== 'object') {
-            return obj;
-        }
-        var newobj = {};
-        for (var attr in obj) {
-            newobj[attr] = obj[attr];
-        }
-        return newobj;
-    }
-    var xData = [],
-        yData = [];
-    data.map((a, b) => {
-        xData.push(a.name);
-        yData.push(a.value);
-    });
-
-
-    var RealData = [];
-    var borderData = [];
-    data.map((item, index) => {
-        var newobj = deepCopy(item);
-        var newobj1 = deepCopy(item);
-        RealData.push(newobj);
-        borderData.push(newobj1);
-    });
-    RealData.map((item, index) => {
-        item.itemStyle = {
-            normal: {
-                color: {
-                    type: 'linear',
-                    x: 0,
-                    y: 0,
-                    x2: 0,
-                    y2: 1,
-                    colorStops: [{
-                        offset: 0,
-                        color: startColor[index] // 0% 处的颜色
-                    }, {
-                        offset: 1,
-                        color: startColor[index] // 100% 处的颜色
-                    }],
-                    globalCoord: false // 缺省为 false
-                },
-            }
-        }
-    });
-    borderData.map((item, index) => {
-        item.itemStyle = {
-            normal: {
-                color: {
-                    type: 'linear',
-                    x: 0,
-                    y: 0,
-                    x2: 0,
-                    y2: 1,
-                    colorStops: [{
-                        offset: 0,
-                        color: borderStartColor[index] // 0% 处的颜色
-                    }, {
-                        offset: 1,
-                        color: borderStartColor[index] // 100% 处的颜色
-                    }],
-                    globalCoord: false // 缺省为 false
-                },
-            }
-        }
-    });
-    var option = {
-        tooltip: {
-            trigger: 'item',
-            //            position: ['30%', '50%'],
-            confine: true,
-            formatter: "{a} <br/>{b}: {c} ({d}%)"
-        },
-        series: [
-            // 主要展示层的
-            {
-                radius: ['50%', '85%'],
-                center: ['50%', '50%'],
-                type: 'pie',
-                label: {
-                    normal: {
-                        show: false
-                    },
-                    emphasis: {
-                        show: false
-                    }
-                },
-                labelLine: {
-                    normal: {
-                        show: false
-                    },
-                    emphasis: {
-                        show: false
-                    }
-                },
-                name: "派件入库量占比内容",
-                data: RealData
-            },
-            // 边框的设置
-            {
-                radius: ['45%', '50%'],
-                center: ['50%', '50%'],
-                type: 'pie',
-                label: {
-                    normal: {
-                        show: false
-                    },
-                    emphasis: {
-                        show: false
-                    }
-                },
-                labelLine: {
-                    normal: {
-                        show: false
-                    },
-                    emphasis: {
-                        show: false
-                    }
-                },
-                animation: false,
-                tooltip: {
-                    show: false
-                },
-                data: borderData
-            }
-        ]
-    };
-
-    myChart.setOption(option);
-    // myChart1.setOption(option);
-}
-
 function initEcharts() {
     // 基于准备好的dom，初始化echarts实例
     pieChart = echarts.init(document.getElementById('echarts_4'));
@@ -662,148 +504,6 @@ function initEcharts() {
     pieChart.setOption(option);
     window.addEventListener("resize", function () {
         pieChart.resize();
-    });
-}
-
-//电池电量排行图表
-function echarts_5() {
-    //console.info("echarts_5");
-    var myChart = echarts.init(document.getElementById('echarts_5'));
-    var xData = [];
-    var data = []
-
-    var dataList = sortObj(batteryObj)
-    for (var i = 0; i < dataList.length; i++) {
-        xData.push(dataList[i]["key"]);
-        data.push(dataList[i]["value"]);
-    }
-
-    option = {
-        tooltip: {
-            show: "true",
-            trigger: 'item',
-            backgroundColor: 'rgba(0,0,0,0.4)', // 背景
-            padding: [8, 10], //内边距
-            // extraCssText: 'box-shadow: 0 0 3px rgba(255, 255, 255, 0.4);', //添加阴影
-            formatter: function (params) {
-                if (params.seriesName != "") {
-                    return staDeviceMap[params.name.split(".")[1]] + '[' + params.name + ']电量' + ' ：' + params.value + '%';
-                }
-            },
-
-        },
-        grid: {
-            borderWidth: 0,
-            top: 20,
-            bottom: 35,
-            left: 40,
-            right: 10,
-            textStyle: {
-                color: "#fff"
-            }
-        },
-        xAxis: [{
-            type: 'category',
-            axisTick: {
-                show: false
-            },
-
-            axisLine: {
-                show: true,
-                lineStyle: {
-                    color: 'rgba(255,255,255,0.2)',
-                }
-            },
-            axisLabel: {
-                inside: false,
-                textStyle: {
-                    color: '#bac0c0',
-                    fontWeight: 'normal',
-                    fontSize: '12',
-                },
-                // formatter:function(val){
-                //     return val.split("").join("\n")
-                // },
-            },
-            data: xData,
-        }, {
-            type: 'category',
-            axisLine: {
-                show: false
-            },
-            axisTick: {
-                show: false
-            },
-            axisLabel: {
-                show: false
-            },
-            splitArea: {
-                show: false
-            },
-            splitLine: {
-                show: false
-            },
-            data: xData,
-        }],
-        yAxis: {
-            min: 0,
-            type: 'value',
-            axisTick: {
-                show: false
-            },
-            axisLine: {
-                show: true,
-                lineStyle: {
-                    color: 'rgba(255,255,255,0.2)',
-                }
-            },
-            splitLine: {
-                show: true,
-                lineStyle: {
-                    color: 'rgba(255,255,255,0.1)',
-                }
-            },
-            axisLabel: {
-                textStyle: {
-                    color: '#bac0c0',
-                    fontWeight: 'normal',
-                    fontSize: '12',
-                },
-                formatter: '{value}',
-            },
-        },
-        series: [{
-            type: 'bar',
-            itemStyle: {
-                normal: {
-                    show: true,
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                        offset: 0,
-                        color: '#00c0e9'
-                    }, {
-                        offset: 1,
-                        color: '#3b73cf'
-                    }]),
-                    barBorderRadius: 50,
-                    borderWidth: 0,
-                },
-                emphasis: {
-                    shadowBlur: 15,
-                    shadowColor: 'rgba(105,123, 214, 0.7)'
-                }
-            },
-            zlevel: 2,
-            barWidth: '20%',
-            data: data,
-        }
-        ]
-    }
-
-
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
-    window.addEventListener("resize", function () {
-        myChart.resize();
     });
 }
 
@@ -914,33 +614,11 @@ function rightclick() {
             //修改参数
             // $("#editDev").val(type)
             // $("#saveParam").val(staid);d
-            $("#editDev").click(function () {
-                popupCenter($("#staInfoTable").parent())    //弹窗居中
-                $("#staInfoTable").parent().css("display", "block");
-                if ($('#menu').is(':visible')) {
-                    $('#menu').hide();
-                }
-                getStaPar(type);
-            });
+            $("#editDev").attr("devcode",type);
 
-            $(".stapar_close").on("click",function () {
-                $("#staInfoTable").parent().hide();
-            });
+            $("#waveBtn").attr("devcode",type);
 
-            //报警参数
-            $("#alertDev").click(function () {
-                popupCenter($("#staAlarmTable").parent())    //弹窗居中
-                $("#staAlarmTable").parent().hide();
-                var code = $(this).val();
-                if ($('#menu').is(':visible')) {
-                    $('#menu').hide();
-                }
-                getAlarmPar(code);
-            });
-
-            $(".alarm_close").click(function () {
-                $("#staAlarmTable").parent().hide();
-            })
+            $("#alertDev").attr("pointid",staid);
 
             $("#menu li").each(function () {
                 if ($(this).hasClass("alarm_on")) {
@@ -956,37 +634,40 @@ function rightclick() {
                     $(this).attr("id", staid + "_0")
                 }
             });
-
-
-
-            //修改报警值
-            /*$(".alert_scssz").click(function () {
-                // console.log("staid:"+staid);
-                // var pointid = staid.replace("_",".")
-                // console.log("pointid:"+pointid);
-                $.getJSON("../monitor/getAlertConfig",{pointid:staid},function (resp) {
-                    $("#guardEnable").prop('checked',resp["guardEnable"]);
-                    $("#range2").val(resp["ch2Range"]);
-                    for(var i=3;i<=8;i++){
-                        var range = resp["ch"+i+"Range"];
-                        if(range !== "#" && range !== ""){
-                            $("#range"+i).val(range.split("#")[0]);
-                            $("#_range"+i).val(range.split("#")[1]);
-                        }else{
-                            $("#range"+i).val("");
-                            $("#_range"+i).val("");
-                        }
-                    }
-                });
-                $(".save_alarm").attr("id", staid);
-                popupCenter($("#div_setQJ"))    //弹窗居中
-                $("#div_setQJ").css("display", "block");
-                if ($('#menu').is(':visible')) {
-                    $('#menu').hide();
-                }
-            })*/
         });
     }
+
+    //修改参数
+    $("#editDev").click(function () {
+        popupCenter($("#staInfoTable").parent())    //弹窗居中
+        $("#staInfoTable").parent().css("display", "block");
+        if ($('#menu').is(':visible')) {
+            $('#menu').hide();
+        }
+        getStaPar($(this).attr("devcode"));
+    });
+    $(".stapar_close").on("click",function () {
+        $("#staInfoTable").parent().hide();
+    });
+
+    //修改报警参数
+    $("#alertDev").click(function () {
+        popupCenter($("#staAlarmTable").parent())    //弹窗居中
+        $("#staAlarmTable").parent().hide();
+        if ($('#menu').is(':visible')) {
+            $('#menu').hide();
+        }
+        getAlarmPar($(this).attr("pointid"));
+    });
+    $(".alarm_close").click(function () {
+        $("#staAlarmTable").parent().hide();
+    })
+
+    //打开波形界面
+    $("#waveBtn").click(function () {
+        alert($(this).attr("devcode"))
+        // window.open("../monitor/devdata?devcode="+$(this).attr("type"))
+    })
 }
 
 //初始化弹出窗
@@ -1052,6 +733,231 @@ function getAlarmPar(staid) {
         }
     });
     $("#saveAlarm").val(staid);
+}
+
+function echarts_1() {
+
+
+    console.log("echarts_1")
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('echart1'));
+    option = {
+        //  backgroundColor: '#00265f',
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        grid: {
+            left: '0%',
+            top:'10px',
+            right: '0%',
+            bottom: '4%',
+            containLabel: true
+        },
+        xAxis: [{
+            type: 'category',
+            data: ['CN.23540', 'SH.49811', 'SH.00003'],
+            axisLine: {
+                show: true,
+                lineStyle: {
+                    color: "rgba(255,255,255,.1)",
+                    width: 1,
+                    type: "solid"
+                },
+            },
+            axisTick: {
+                show: false,
+            },
+            axisLabel:  {
+                interval: 0,
+                // rotate:50,
+                show: true,
+                splitNumber: 15,
+                textStyle: {
+                    color: "rgba(255,255,255,.6)",
+                    fontSize: '12',
+                },
+            },
+        }],
+        yAxis: [{
+            type: 'value',
+            axisLabel: {
+                //formatter: '{value} %'
+                show:true,
+                textStyle: {
+                    color: "rgba(255,255,255,.6)",
+                    fontSize: '12',
+                },
+            },
+            axisTick: {
+                show: false,
+            },
+            axisLine: {
+                show: true,
+                lineStyle: {
+                    color: "rgba(255,255,255,.1	)",
+                    width: 1,
+                    type: "solid"
+                },
+            },
+            splitLine: {
+                lineStyle: {
+                    color: "rgba(255,255,255,.1)",
+                }
+            }
+        }],
+        series: [
+            {
+                type: 'bar',
+                data: [20, 10, 5],
+                barWidth:'35%', //柱子宽度
+                // barGap: 1, //柱子之间间距
+                itemStyle: {
+                    normal: {
+                        color:'#2f89cf',
+                        opacity: 1,
+                        barBorderRadius: 5,
+                    }
+                }
+            }
+
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    window.addEventListener("resize",function(){
+        myChart.resize();
+    });
+}
+
+function echarts_4() {
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('echart4'));
+
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                lineStyle: {
+                    color: '#dddc6b'
+                }
+            }
+        },
+        // legend: {
+        //     top:'0%',
+        //     data:['点到','未点到'],
+        //     textStyle: {
+        //         color: 'rgba(255,255,255,.5)',
+        //         fontSize:'12',
+        //     }
+        // },
+        grid: {
+            left: '10',
+            top: '30',
+            right: '10',
+            bottom: '10',
+            containLabel: true
+        },
+
+        xAxis: [{
+            type: 'category',
+            boundaryGap: false,
+            axisLabel:  {
+                textStyle: {
+                    color: "rgba(255,255,255,.6)",
+                    fontSize:12,
+                },
+            },
+            axisLine: {
+                lineStyle: {
+                    color: 'rgba(255,255,255,.2)'
+                }
+
+            },
+            //日期
+            data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+
+        }, {
+
+            axisPointer: {show: false},
+            axisLine: {  show: false},
+            position: 'bottom',
+            offset: 20,
+
+
+
+        }],
+
+        yAxis: [{
+            type: 'value',
+            axisTick: {show: false},
+            axisLine: {
+                lineStyle: {
+                    color: 'rgba(255,255,255,.1)'
+                }
+            },
+            axisLabel:  {
+                textStyle: {
+                    color: "rgba(255,255,255,.6)",
+                    fontSize:12,
+                },
+            },
+
+            splitLine: {
+                lineStyle: {
+                    color: 'rgba(255,255,255,.1)'
+                }
+            }
+        }],
+        series: [
+            {
+                name: '点到',
+                type: 'line',
+                smooth: true,
+                symbol: 'circle',
+                symbolSize: 5,
+                showSymbol: false,
+                lineStyle: {
+
+                    normal: {
+                        color: '#0184d5',
+                        width: 2
+                    }
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(1, 132, 213, 0.4)'
+                        }, {
+                            offset: 0.8,
+                            color: 'rgba(1, 132, 213, 0.1)'
+                        }], false),
+                        shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#0184d5',
+                        borderColor: 'rgba(221, 220, 107, .1)',
+                        borderWidth: 12
+                    }
+                },
+                data: [3, 4, 3, 4, 3, 4, 3, 6, 2, 4, 2, 4,3, 4, 3, 4, 3, 4, 3, 6, 2, 4, 2, 4]
+
+            },
+        ]
+
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    window.addEventListener("resize",function(){
+        myChart.resize();
+    });
 }
 
 

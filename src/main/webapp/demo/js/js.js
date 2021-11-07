@@ -20,21 +20,14 @@ var tdate;  //触发数据日期选择
 // };
 // laydate(startTime);
 
-//初始化基础数据
-function fetchBaseInfo() {
-    DEV_CODE = $("#devcode").val();
-    $.ajaxSettings.async = false;
+//获取pointid
+function fetchPointId() {
     $.getJSON("../monitor/getdevinfo",{code:DEV_CODE},function (result) {
         POINT_ID = result["NetCode"]+"."+result["StaCode"];
-        $.each(result, function (key, value) {
-            // console.log(key,value)
-            $("."+key).text(value);
-        });
+        // $.each(result, function (key, value) {
+        //     $("."+key).text(value);
+        // });
     });
-    $.ajaxSettings.async = true;
-    $("#startTime").val(TimeFrameUtil.format(new Date(),"yyyy-MM-dd"))
-    $("#startTime").val("2021-08-29")
-    mdate = $("#startTime").val();
 }
 
 //获取实时数据
@@ -57,15 +50,40 @@ function fetchTrigerData() {
 
 function updateWaveform() {
     $.getJSON("../monitor/getMonStoreData",{pointid:POINT_ID,date:mdate},function (result) {
-        if(result["time"]){
+        if(result["time"].length > 0){
             for(var i=4;i<=11;i++){
                 echarts_waveform(result["ch"+i],result["time"],"monchart"+i,parseChName((i-3)));
             }
         }else{
             alert(mdate+"无历史数据");
+            for(var i=4;i<=11;i++){
+                echarts_waveform([],[],"monchart"+i,parseChName((i-3)));
+            }
         }
 
     });
+}
+
+/*获取台站选项*/
+function fetchDevList() {
+    $.getJSON("../monitor/getdevlist",{pointid:POINT_ID,date:mdate},function (result) {
+        $("#stadev_list").empty()
+        $("#stadev_list").append(`<option value="">请选择台站代码</option>`)
+        for(var i=0;i<result.length;i++){
+            $("#stadev_list").append(`<option value="${result[i]["pointid"]}">${result[i]["pointid"]}</option>`)
+        }
+        if(POINT_ID !==""){
+            $("#stadev_list").val(POINT_ID)
+        }
+    });
+}
+
+/*初始化参数*/
+function initParams() {
+    DEV_CODE = $("#devcode").val();
+    $("#startTime").val(TimeFrameUtil.format(new Date(),"yyyy-MM-dd"))
+    $("#startTime").val("2021-08-29")
+    mdate = $("#startTime").val();
 }
 
 $(function () {
@@ -75,15 +93,27 @@ $(function () {
         laydate.render({
             elem: '#startTime',
             done: function(value, date){
-                alert("选中："+value)
+                // alert("选中："+value)
                 mdate = value;
-                updateWaveform();
                 // layer.alert('你选择的日期是：' + value + '<br>获得的对象是' + JSON.stringify(date));
             }
         });
     });
 
-    fetchBaseInfo();
+    initParams()
+    $.ajaxSettings.async = false;
+    fetchPointId();
+    fetchDevList();
+    $.ajaxSettings.async = true;
+
+    $("#stadev_list").on("change",function () {
+        POINT_ID = $(this).val()
+    });
+
+    $("#devSearch").on("click",function () {
+        updateWaveform();
+    })
+
     fetchMonitorData();
     fetchTrigerData();
     echarts_4();

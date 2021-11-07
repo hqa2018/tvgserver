@@ -11,7 +11,6 @@
     <script type="text/javascript" src="${request.getContextPath()}/static/demo/js/jquery.js"></script>
     <asset:javascript src="layui/layui.js"/>
     <asset:javascript src="laydate/laydate.js"/>
-
 </head>
 <style>
 .info-table {
@@ -39,6 +38,31 @@
     color: #cdddf7;
     padding-left: 10px;
 }
+
+
+.time-button {
+    width: 0.7rem;
+    height: 0.4rem;
+    box-sizing: border-box;
+    border: 1px
+    solid #0E94EA;
+    font-size: 0.16rem;
+    background: rgba(14, 148, 234, 0.2);
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #cdddf7;
+}
+
+button:hover {
+    background: rgba(14, 148, 234, 0.6);
+    cursor: pointer;
+}
+
+.boxall span{
+    color: #FFFFFF;
+    font-size: 0.16rem;
+}
 </style>
 <script>
     $(window).load(function () {
@@ -65,16 +89,21 @@
     <div class="loadbox"> <img src="${request.getContextPath()}/static/demo/images/loading.gif"> 页面加载中... </div>
 </div>
 <div class="head">
-    <h1>SH.49811设备详情</h1>
+    <h1>历史状态数据查询</h1>
     <div class="weather"><span id="showTime"></span></div>
     <script>
     </script>
 </div>
 <div class="mainbox">
     <ul class="clearfix">
-        <li style="width: 65%">
-            <div class="boxall" style="height:40px">
-                <div class="alltitle">历史波形查询<input class="time-input" type="text" value="" id="startTime"></div>
+        <li style="width: 100%">
+            <div class="boxall" style="height:40px;">
+                <span>代码</span>
+                <select id="stadev_list" class="time-input" style="margin-left: 50px">
+                </select>
+                <span style="margin-left: 210px">日期</span>
+                <input class="time-input" type="text" value="" id="startTime" style="margin-left: 300px">
+                <button id="devSearch" class="time-button" style="margin-left: 500px">查询</button>
             </div>
             <div class="boxall" style="height:8rem;overflow-y: auto">
                 <div class="linenav" id="monchart4"></div>
@@ -88,7 +117,7 @@
                 <div class="boxfoot"></div>
             </div>
         </li>
-        <li style="width: 30%">
+        <li style="width: 30%;display: none">
             <div class="boxall" style="height:10rem;">
                 <h3 class="txxs-h3">事件触发记录</h3>
             </div>
