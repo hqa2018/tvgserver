@@ -6,6 +6,7 @@ import com.taide.system.SystemConfig
 import com.taide.util.FileUtil
 import com.taide.util.NumberUtils
 import grails.converters.JSON
+import org.apache.commons.lang3.StringUtils
 
 import java.util.regex.Pattern
 
@@ -40,6 +41,10 @@ class MonitorController {
     }
 
     def devdata(){
+
+    }
+
+    def eventdata(){
 
     }
 
@@ -499,32 +504,90 @@ class MonitorController {
         render(datamap as JSON)
     }
 
-    def getTrigerData = {
-//        /tvgserver/monitor/getTrigerData?pointid=SH.49811&date=2021-11-02
-//        \SH\49811\2021\8-17
+
+    def getEventMonths = {
         def netcode = params.pointid.split("\\.")[0]
         def stacode = params.pointid.split("\\.")[1]
-        def year = "2021"
-        def month = "8"
-        def day = "17"
+//        def year = "2021"
+//        def month = "8"
+//        def day = "17"
         /*if(params.date){
             year = params.date.split("-")[0]
             month = params.date.split("-")[1]
             day = params.date.split("-")[2]
         }*/
-        String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/"+year+"/"+month+"-"+day+"/Triger.txt"
-        ArrayList list = FileUtil.readFileContent(path,"utf-8");
+//        String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/"+year+"/"+month+"-"+day+"/Triger.txt"
+        String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode
+
+        ArrayList result = new ArrayList()
+        //过滤获取目录
+        ArrayList<File> yearList = FileUtil.listFilesInDirWithFilter(path,new FileFilter() {
+            @Override
+            boolean accept(File pathname) {
+                return StringUtils.isNumeric(pathname.getName())
+            }
+        },true);
+        for(File y : yearList){
+            ArrayList<File> fileList = FileUtil.listFilesInDir(y)
+            for(File f:fileList){
+                println(f.getName())
+                String month = f.getName().substring(0,6);
+                if(!result.contains(month)){
+                    result.add(month)
+                }
+            }
+//            println(f.getName().substring(0,5))
+        }
+        render(result as JSON)
+    }
+
+    def getEventsByMonth = {
+        def netcode = params.pointid.split("\\.")[0]
+        def stacode = params.pointid.split("\\.")[1]
+        String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/"
+        ArrayList result = new ArrayList()
+        //过滤获取目录
+        ArrayList<File> fileList = FileUtil.listFilesInDir(path,true)
+        for(File f : fileList){
+            if(f.getName().length() > 7 && !f.getAbsolutePath().contains("monitor")){
+                if(f.getName().substring(0,6).equals(params.month)){
+                    result.add(f.getName())
+                }
+            }
+        }
+        render(result as JSON)
+    }
+
+    //
+    def fetchEventLog = {
+//        /tvgserver/monitor/getTrigerData?pointid=SH.49811&date=2021-11-02
+//        \SH\49811\2021\8-17
+        def netcode = params.pointid.split("\\.")[0]
+        def stacode = params.pointid.split("\\.")[1]
+        def filename = params.filename
+        def year = "2021"
+        String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/"+year+"/"+filename+".txt"
+        println "path="+path
+        ArrayList list = FileUtil.readFileContent(path,"gbk");
         ArrayList result = new ArrayList();
         for(int i=0;i<list.size();i++){
             String line = list.get(i)
             String dateTime = line.split(",")[3]
             def obj = [:]
             obj["dataTime"] = dateTime
-            obj["params"] = line.split(",")[4]+","+line.split(",")[5]+","+line.split(",")[6]+","+line.split(",")[7]
+            obj["params"] = line.split(",")[1]+","+line.split(",")[2]+","+line.split(",")[4]+","+line.split(",")[5]+","+line.split(",")[6]+","+line.split(",")[7]+","+line.split(",")[8]
             obj["describe"] = line.split(",")[line.split(",").length-1];
             result.add(obj)
         }
         render(result as JSON)
+    }
+
+    def downloadEventData = {
+        def netcode = params.pointid.split("\\.")[0]
+        def stacode = params.pointid.split("\\.")[1]
+        //D:\Download\event\CN\23540\20211103085739.dat
+        String path = DataManager.ROOT_PATH+"/event/"+netcode+"/"+stacode+"/"+params.file+".dat"
+        fileDownload(path)
     }
 
     /**
@@ -578,11 +641,33 @@ class MonitorController {
     /**
      * 文件下载
      */
-    def fileDownload = {
+    /*def fileDownload = {
 //        def filePath = params.filePath  //文件路径
         def filePath = "D:/tia.ini"
 //        def fileName = encode(params.fileName)  //文件名
         def fileName = "tia.ini"
+        response.setHeader("Content-disposition", "attachment; filename=" + fileName)
+        response.contentType = "application/x-rarx-rar-compressed"
+        def out = response.outputStream
+        def inputStream = new FileInputStream(filePath)
+        byte[] buffer = new byte[1024]
+        int i = -1
+        while ((i = inputStream.read(buffer)) != -1) {
+            out.write(buffer, 0, i)
+        }
+        out.flush()
+        out.close()
+        inputStream.close()
+    }*/
+
+    /**
+     * 文件下载
+     */
+    def fileDownload(filePath){
+//        def filePath = params.filePath  //文件路径
+//        def fileName = encode(params.fileName)  //文件名
+        def file = FileUtil.getFileByPath(filePath)
+        def fileName = file.getName()
         response.setHeader("Content-disposition", "attachment; filename=" + fileName)
         response.contentType = "application/x-rarx-rar-compressed"
         def out = response.outputStream
