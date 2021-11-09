@@ -95,7 +95,7 @@ button:hover {
 </div>
 <div class="mainbox">
     <ul class="clearfix">
-        <li style="width: 30%;">
+        <li style="width: 30%;display: none">
             <div class="boxall" style="height:8rem;">
                 <h3 class="txxs-h3">事件触发记录</h3>
                 <div class="bar">
@@ -128,7 +128,7 @@ button:hover {
                 </div>
             </div>
         </li>
-        <li style="width: 70%">
+        <li style="width: 100%">
             <div class="boxall" style="height:32px;">
                 <span>代码</span>
                 <select id="stadev_list" class="time-input" style="margin-left: 50px"></select>

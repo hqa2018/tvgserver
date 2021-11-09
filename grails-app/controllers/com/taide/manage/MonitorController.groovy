@@ -8,6 +8,7 @@ import com.taide.util.NumberUtils
 import grails.converters.JSON
 import org.apache.commons.lang3.StringUtils
 
+import java.lang.reflect.Array
 import java.util.regex.Pattern
 
 class MonitorController {
@@ -589,6 +590,26 @@ class MonitorController {
         String path = DataManager.ROOT_PATH+"/event/"+netcode+"/"+stacode+"/"+params.file+".dat"
         fileDownload(path)
     }
+
+    //统计事件触发数量
+    def eventCount = {
+        def result = [];
+        Map devData = DataManager.getInstance().getCacheItems()
+        for(String key : devData.keySet()){
+            StationDev stadev = devData.get(key);
+            ArrayList list = FileUtil.listFilesInDir(DataManager.ROOT_PATH+"/event/"+stadev.NetCode+"/"+stadev.StaCode)
+            def obj = [:]
+            obj["pointid"] = stadev.NetCode+"."+stadev.StaCode;
+            obj["count"] = list==null ? 0 : list.size();
+            result.add(obj)
+        }
+
+        def result1 = result.sort{a,b->
+            return a.count-b.count
+        }
+        render(result1 as JSON)
+    }
+
 
     /**
      * 按月统计每天的触发数量
