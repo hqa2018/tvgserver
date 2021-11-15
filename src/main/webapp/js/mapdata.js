@@ -334,6 +334,7 @@ function queryMapData() {
 		var html = "";
 		// $("#deviceUl").empty();
 		console.log("resp.length="+resp.length);
+		$("#sta_search").empty()
 		if(resp.length > 0){
 			for(var i=0;i<resp.length;i++){
 				var eqobj = resp[i];
@@ -341,6 +342,7 @@ function queryMapData() {
 					vectorSource.addFeature(parseFeatureDate(eqobj));
 					html += parseTableCell(eqobj);
 				}
+				$("#sta_search").append(`<option value="${eqobj.pointid}">${eqobj.pointid}</option>`)
 			}
 			statusCount[2] = resp.length - statusCount[0] - statusCount[1]
 			$("#deviceUl").html(html);
@@ -354,8 +356,20 @@ function queryMapData() {
 		map.getView().fit(vectorSource.getExtent(), map.getSize());
 		map.getView().setZoom(8);
 
+		layui.use('form', function(){
+			let form = layui.form;
+			form.render('select');
+			form.on('select(staCode)', function(data){
+				// console.log("select(staCode):"+data.value)
+				$("#sta_search").val(data.value);
+				form.render('select');
+				renderMonitorDataBySearch(data.value)
+				// setMapData(myChart,data.value);
+			});
+		})
 		// setPieChart();
 	});
+
 }
 
 

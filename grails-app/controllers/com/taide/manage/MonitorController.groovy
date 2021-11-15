@@ -87,6 +87,17 @@ class MonitorController {
     }
 
     /**
+     * 设备控制
+     * pointid:指定设备ID
+     * cmd:控制指令
+     * type:控制参数
+     */
+    def control = {
+        FileUtil.writeTxtFile(DataManager.ROOT_PATH+"/setpar/"+params["pointid"]+"."+params["cmd"],params["type"],false);
+        render("ok")
+    }
+
+    /**
      * 保存参数
      * 文件名：台网.台站代码.par
      * */

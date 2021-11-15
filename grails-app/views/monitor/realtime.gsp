@@ -26,6 +26,12 @@
     <div id="menu">
         <ul>
             <li id="editDev" class="li_scssz">参数设置</li>
+            <li id="monitor" class="li_scssz set_control">获取状态数据</li>
+            <li id="alert" class="li_scssz set_control">设置监测参数</li>
+            <li id="mode" class="li_scssz set_control">工作模式</li>
+            <li id="tf" class="li_scssz set_control">TF卡格式化</li>
+            <li id="download" class="li_scssz set_control">下载参数</li>
+            <li id="stop" class="li_scssz set_control">停止下载</li>
             <li id="alertDev" class="alert_scssz">报警设置</li>
             <li id="waveBtn" class="li_scssz">波形数据</li>
             <li class="rebootBtn">设备重启</li>

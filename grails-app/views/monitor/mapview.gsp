@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/static/css/common.css?t=139">
     <link rel="stylesheet" href="/static/css/mapview.css?t=139">
     <link rel="stylesheet" href="/static/fonts/iconfont.css">
+    <asset:stylesheet href="layui/css/layui.css"/>
     <script src="/static/js/echarts.min.js"></script>
     <script src="/static/js/macarons.js"></script>
     <link href="/static/js/mapselect/css/mapTypeSelect.css?t=017" rel="stylesheet">
@@ -33,7 +34,6 @@
                         <p>纬经度: 103.08,27.42</p></dd>
                     </dl></li>
             </ul>
-
         </div>
         <div class="middle_con fl">
             %{--设备状态信息详情--}%
@@ -66,6 +66,14 @@
             <div id="container" class="middle_top">
                 <div id="mapType-wrapper"/>
             </div>
+            %{--台站筛选--}%
+            <div class="layui-form layui-form-item top_select">
+                <select id="sta_search" name="modules" lay-verify="required" lay-search="" lay-filter="staCode">
+                    <option value="">搜索台站</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
 
             %{--报警信息--}%
             <div class="alarm-box">
@@ -77,6 +85,7 @@
         </div>
     </div>
 </div>
+<asset:javascript src="layui/layui.all.js"/>
 <link rel="stylesheet" href="/static/js/openlayers/ol.css" type="text/css">
 <script type="text/javascript" src="/static/js/openlayers/ol.js"></script>
 <script type="text/javascript" src="/static/js/openlayers/bmaplayer.js?t=002"></script>

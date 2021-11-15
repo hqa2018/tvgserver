@@ -1,6 +1,5 @@
 var alertMap = {};//监测项字典信息列
 var pieChart;           //状态饼图
-var batteryObj = {}     //电池电量
 var stacount = 0;       //台站总数
 var staDeviceMap = {}   //台站设备名称
 var alarmContent = "";  //报警内容
@@ -614,6 +613,8 @@ function rightclick() {
             //修改参数
             // $("#editDev").val(type)
             // $("#saveParam").val(staid);d
+            $(".set_control").attr("pointid",staid)
+
             $("#editDev").attr("devcode",type);
 
             $("#waveBtn").attr("devcode",type);
@@ -636,6 +637,16 @@ function rightclick() {
             });
         });
     }
+
+    $(".set_control").click(function () {
+        alert($(this).attr("pointid")+"_"+$(this).attr("id"))
+        var cmd = $(this).attr("id");
+        var type = "0";
+        $.getJSON("/static/monitor/restart",{pointid:pointid,cmd:cmd,type:type},function (resp) {
+            alert(resp);
+        })
+
+    })
 
     //修改参数
     $("#editDev").click(function () {

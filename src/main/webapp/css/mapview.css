@@ -1123,4 +1123,28 @@ h3 {
 	opacity: 1.0;
 }
 
+.layui-form {
+	transition-delay: 2s;
+	z-index: 99;
+	width: 120px;
+	/*height: 50px;*/
+	/*background-color: #0d2a45;*/
+	color: black;
+	/*border: 1px solid #0e94ea;*/
+	position: absolute;
+	top: 1rem;
+	right: 20rem;
+	text-align: center;
+	/*border: 1px solid #0E94EA;*/
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-around;
+	align-items: center;
+	cursor:pointer;
+}
+
+.layui-form-select dl {
+	top: 28px;
+}
+
 /*# sourceMappingURL=four.css.map */

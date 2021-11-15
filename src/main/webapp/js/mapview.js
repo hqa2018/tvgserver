@@ -1,5 +1,12 @@
-
 var INTERVAL_TIME = 10000;  //定时更新间隔
+//最新台站监测数据列表，此数组为原始数据
+var lastMonitorDataList = null;
+//点击查询按钮过滤后的监测数据列表
+var filterMonitorDataList = [];
+//当前选择的监测数据列表
+var curSelectMonitorDataList = null;
+//当前选择状态
+var curSelectMonStatus = "ALL"
 
 $(function () {
     initMapSwitch();    //初始化地图切换控件
@@ -181,7 +188,9 @@ function getAlarmPar(staid) {
 function updateMapData() {
     $.getJSON("../monitor/queryrecord",{},function (resp) {
         try {
-            statusCount = [0,0,0];	//正常,异常，中断
+            lastMonitorDataList = resp
+            //进行状态筛选
+            /*statusCount = [0,0,0];	//正常,异常，中断
             vectorSource.clear();
             var html = "";
             if(resp.length > 0){
@@ -194,14 +203,55 @@ function updateMapData() {
                 }
                 statusCount[2] = resp.length - statusCount[0] - statusCount[1]
                 $("#deviceUl").html(html);
-            }
-
+            }*/
+            renderMonitorDataByStatus(curSelectMonStatus)
         }catch (e) {
             console.log(e);
         }
         // setPieChart();
         setTimeout(updateMapData,INTERVAL_TIME);
     });
+}
+
+//根据查询进行过滤显示
+function renderMonitorDataBySearch(staCode) {
+    filterMonitorDataList.splice(0, filterMonitorDataList.length);
+    for (var it in lastMonitorDataList) {
+        if(staCode !== ""){
+            if (lastMonitorDataList[it].pointid.indexOf(staCode) >= 0)
+                filterMonitorDataList.push(lastMonitorDataList[it])
+        }else{
+            filterMonitorDataList.push(lastMonitorDataList[it])
+        }
+    }
+    curSelectMonitorDataList = filterMonitorDataList;
+    curSelectMonitorDataCount = filterMonitorDataList.length;
+    renderMonitorData("ALL");
+}
+
+//根据仪器状态进行过滤显示
+function renderMonitorDataByStatus(dev_status) {
+    // console.log("dev_type:"+dev_type)
+    if (dev_status === "ALL") {
+        curSelectMonitorDataList = lastMonitorDataList;
+    } else {
+        // curSelectMonitorDataList = lastMonitorDataDict[dev_type];
+    }
+    renderMonitorData();
+}
+
+//渲染数据显示
+function renderMonitorData() {
+    vectorSource.clear();
+    var len = curSelectMonitorDataList.length;
+    console.log("curSelectMonitorDataList.length:" + curSelectMonitorDataList.length)
+    for (var n = len - 1; n >= 0; n--) {
+        var opt = curSelectMonitorDataList[n];
+        var feature = parseFeatureDate(opt)
+        vectorSource.addFeature(feature);
+    }
+    map.addLayer(vectorLayer);
+    map.getView().fit(vectorSource.getExtent(), map.getSize());
 }
 
 /**
