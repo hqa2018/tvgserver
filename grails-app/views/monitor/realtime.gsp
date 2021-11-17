@@ -11,6 +11,7 @@
     <script src="${request.getContextPath()}/static/js/echarts.min.js"></script>
     <script src="${request.getContextPath()}/static/js/macarons.js"></script>
     <script src="${request.getContextPath()}/static/js/countUp.js"></script>
+    <asset:stylesheet href="layui/css/layui.css"/>
     <style>
     </style>
 </head>
@@ -84,6 +85,7 @@
         </div>
     </div>
 </div>
+<asset:javascript src="layui/layui.js"/>
 <script src="${request.getContextPath()}/static/js/realtime.js?time=005"></script>
 <asset:javascript src="base.js"/>
 </body>

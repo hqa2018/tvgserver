@@ -137,3 +137,11 @@ body{background:#010e50 url(../images/map_bg.jpg) center top no-repeat;backgroun
 .popup_close{
 	cursor:pointer;
 }
+
+/*自定义右键菜单样式*/
+.site-dropdown-custom,
+.site-dropdown-custom .layui-menu{background-color: #052f97; border: 1px solid #0258f0;margin:0px;}
+.site-dropdown-custom .layui-menu li{color: #fff;border-bottom: 2px solid #0258f0;}
+.site-dropdown-custom .layui-menu li:hover{background-color: #042479;}
+
+.site-dropdown-custom .layui-menu-body-panel{background-color: #052f97; border: 1px solid #0258f0;margin:0px;}

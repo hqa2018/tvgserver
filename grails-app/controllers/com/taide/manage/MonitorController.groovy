@@ -3,6 +3,7 @@ package com.taide.manage
 import com.taide.entity.StationDev
 import com.taide.system.AlarmConifg
 import com.taide.system.SystemConfig
+import com.taide.util.DateUtils
 import com.taide.util.FileUtil
 import com.taide.util.NumberUtils
 import grails.converters.JSON
@@ -93,7 +94,9 @@ class MonitorController {
      * type:控制参数
      */
     def control = {
-        FileUtil.writeTxtFile(DataManager.ROOT_PATH+"/setpar/"+params["pointid"]+"."+params["cmd"],params["type"],false);
+        def path = DataManager.ROOT_PATH+"/setpar/"+params["pointid"]+"."+params["cmd"]
+        println("path="+path)
+        FileUtil.writeTxtFile(path,params["type"],false);
         render("ok")
     }
 
@@ -468,6 +471,41 @@ class MonitorController {
         }
     }
 
+    //获取台站运行率
+    def fetchMonitorRunrate = {
+        def result = [:]
+        def netcode = params.pointid.split("\\.")[0]
+        def stacode = params.pointid.split("\\.")[1]
+        String path = DataManager.ROOT_PATH+"/trace/"+netcode+"/"+stacode+"/";
+        List<String> datelist = DateUtils.getEveryday(params.start, params.end);
+
+        def ratecount = 0;
+        def data = []
+        result["data"] = data
+        for (String datestr : datelist) {
+            datestr = datestr.replaceAll("-","")
+            println("datestr="+datestr)
+            List<File> fileList = FileUtil.listFilesInDirWithFilter(path,new FileFilter() {
+                @Override
+                boolean accept(File pathname) {
+//                    println("name="+pathname.getName().substring(0,8))
+                    return datestr.equals(pathname.getName().substring(0,8))
+                }
+            },false);
+            double runrate = (double) fileList.size()/24
+            ratecount += runrate
+            def obj = [:]
+            obj["date"] = datestr
+            obj["runrate"] = runrate
+            data.add(obj)
+        }
+
+        def avgrate = ratecount/datelist.size()
+//        println("avgrate="+avgrate)
+        result["sumrate"] = avgrate
+        render(result as JSON)
+    }
+
     /*查询历史数据*/
     def fetchMonitorData = {
         if(params.stationid.split(".").size() > 1){
@@ -653,7 +691,7 @@ class MonitorController {
 
 
     def test = {
-        List<File> fileList = FileUtil.listFilesInDir("D:/Download/data/");
+        /*List<File> fileList = FileUtil.listFilesInDir("D:/Download/data/");
         for(File f:fileList){
             //匹配两个字符的台网代码
             boolean isMatch = Pattern.matches("^[A-Z][A-Z]\$", f.getName());
@@ -662,7 +700,7 @@ class MonitorController {
             }
         }
 //        dataManagerService.gethistorydata();
-        render("success")
+        render("success")*/
     }
 
     def getRootPath = {

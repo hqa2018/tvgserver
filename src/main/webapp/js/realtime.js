@@ -13,6 +13,8 @@ let manCode = "";
 let staCode = "";
 var closeSta = ""; //关闭窗口时，需解除报警的台站
 var closeSign = true; //是否已经点击过关闭窗口
+let cur_devcode = "";   //当前设备代码
+let cur_pointid = "";   //当前设备台网台站代码
 
 function initAlarmPop() {
     $(".button_close").click(function(){
@@ -584,6 +586,94 @@ function playPause() {
 
 //右键点击方法
 function rightclick() {
+
+    layui.use(['dropdown', 'util', 'layer', 'table'], function(){
+        var dropdown = layui.dropdown;
+        //右键菜单
+        var inst = dropdown.render({
+            elem: '.info' //也可绑定到 document，从而重置整个右键
+            ,trigger: 'contextmenu' //contextmenu
+            ,isAllowSpread: false //禁止菜单组展开收缩
+            ,style: 'width: 200px' //定义宽度，默认自适应
+            ,id: 'dev_control' //定义唯一索引
+            ,data: [{
+                title: '参数设置'
+                ,id: 'setpar'
+            },{
+                title: '重启设备'
+                ,type:'control'
+                ,id: 'reboot'
+            },{
+                title: '获取状态数据'
+                ,type:'control'
+                ,id: 'monitor'
+            },{
+                title: '设置越界监测'
+                ,type:'control'
+                ,id: 'alert'
+            },{
+                title: '工作模式'
+                ,id: '#3'
+                ,child: [{
+                    title: '4G不工作模式'
+                    ,type:'control'
+                    ,id: 'mode'
+                    ,value:'0'
+                },{
+                    title: '4G实时数据模式'
+                    ,type:'control'
+                    ,id: 'mode'
+                    ,value:'1'
+                },{
+                    title: '4G 非实时监测模式'
+                    ,type:'control'
+                    ,id: 'mode'
+                    ,value:'2'
+                }]
+            },{
+                title: 'TF卡格式化'
+                ,id: '#3'
+                ,child: [{
+                    title: '格式化为 FM_FAT32'
+                    ,type:'control'
+                    ,id: 'tf'
+                    ,value:'0'
+                },{
+                    title: '格式化为 FM_EXFAT'
+                    ,type:'control'
+                    ,id: 'tf'
+                    ,value:'1'
+                }]
+            },{
+                title: '下载参数'
+                ,id: 'download'
+            }]
+            ,className: 'site-dropdown-custom'
+            ,click: function(obj, othis){
+                if(obj.id === 'setpar'){
+                    popupCenter($("#staInfoTable").parent())    //弹窗居中
+                    $("#staInfoTable").parent().css("display", "block");
+                    getStaPar($(this).attr("devcode"));
+                    // layer.msg('click');
+                } else if(obj.id === 'print'){
+                    window.print();
+                } else if(obj.id === 'reload'){
+                    location.reload();
+                }else{
+                    //设备控制
+                    if(obj.type == "control"){
+                        // alert("set:"+cur_pointid);
+                        if(confirm("确定对"+cur_pointid+"执行指令?")){
+                            $.get("../monitor/control",{pointid:cur_pointid,cmd:obj.id,type:obj.value},function (resp) {
+                                alert(cur_pointid+"成功执行指令");
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    });
+
     $(".info").bind("contextmenu", function () {
         return false;
     })
@@ -595,57 +685,45 @@ function rightclick() {
     // alert(type)
     for (var i = 0; i < div.length; i++) {
         div[i].addEventListener("contextmenu", function (event) {
-            event.preventDefault();
-            menu.style.display = "block";
-            menu.style.left = event.pageX + "px";
-            menu.style.top = event.pageY + "px";
-            //判断是否为屏幕底部
-            var screenHeight = $(window).height();
-            var objTop = screenHeight - event.pageY;
-            if (objTop < 160)
-                menu.style.top = (event.pageY - 160) + "px";
+            // event.preventDefault();
+            // menu.style.display = "block";
+            // menu.style.left = event.pageX + "px";
+            // menu.style.top = event.pageY + "px";
+            // //判断是否为屏幕底部
+            // var screenHeight = $(window).height();
+            // var objTop = screenHeight - event.pageY;
+            // if (objTop < 160)
+            //     menu.style.top = (event.pageY - 160) + "px";
             //obj.css({left: objLeft + 'px', top: objTop + 'px'});
             //console.info("menuTop="+menu.style.top);
-
             var staid = $(this).attr("id").replace("_",".");
             var type = $(this).attr("type")
-
+            cur_devcode = $(this).attr("type");
+            cur_pointid = $(this).attr("id").replace("_",".");
+            console.log("staid:"+staid)
+            console.log("type:"+type)
             //修改参数
             // $("#editDev").val(type)
             // $("#saveParam").val(staid);d
-            $(".set_control").attr("pointid",staid)
-
-            $("#editDev").attr("devcode",type);
-
-            $("#waveBtn").attr("devcode",type);
-
-            $("#alertDev").attr("pointid",staid);
-
-            $("#menu li").each(function () {
-                if ($(this).hasClass("alarm_on")) {
-                    $(this).attr("id", staid + "_1")
-                }
-                if ($(this).hasClass("alarm_off")) {
-                    $(this).attr("id", staid + "_2")
-                }
-                if ($(this).hasClass("alarm_ban")) {
-                    $(this).attr("id", staid + "_0")
-                }
-                if ($(this).hasClass("rebootBtn")) {
-                    $(this).attr("id", staid + "_0")
-                }
-            });
+            // $(".set_control").attr("pointid",staid)
+            //
+            // $("#editDev").attr("devcode",type);
+            //
+            // $("#waveBtn").attr("devcode",type);
+            //
+            // $("#alertDev").attr("pointid",staid);
+            //
         });
     }
 
     $(".set_control").click(function () {
-        alert($(this).attr("pointid")+"_"+$(this).attr("id"))
+        // alert($(this).attr("pointid")+"_"+$(this).attr("id"))
+        var pointid = $(this).attr("pointid");
         var cmd = $(this).attr("id");
         var type = "0";
-        $.getJSON("/static/monitor/restart",{pointid:pointid,cmd:cmd,type:type},function (resp) {
+        $.get("../monitor/control",{pointid:pointid,cmd:cmd,type:type},function (resp) {
             alert(resp);
         })
-
     })
 
     //修改参数
@@ -703,7 +781,7 @@ function initPopup(){
  * @param type
  */
 function getStaPar(type){
-    $.getJSON("../monitor/getdevinfo",{code:type},function (result) {
+    $.getJSON("../monitor/getdevinfo",{code:cur_devcode},function (result) {
         $("#staInfoTable").parent().show();
         $.each(result,function (key,value) {
             // console.log("key:"+value)
