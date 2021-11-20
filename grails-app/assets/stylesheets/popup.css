@@ -20,6 +20,21 @@
     color: #fff;
 }
 
-.table_info input{
+.table_info input,select{
     width: 100%;
 }
+
+.info-table tr td {
+    padding: 8px;
+    border: 1px solid #545454;
+}
+
+.info-table input,select {
+    background: #0d2a45;
+    border: 0px solid #000;
+    width: 280px;
+    color: white;
+}
+
+
+

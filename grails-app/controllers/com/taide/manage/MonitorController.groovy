@@ -54,6 +54,10 @@ class MonitorController {
 
     }
 
+    def runrate(){
+
+    }
+
     //======================后台操作=======================//
 
     /**
@@ -95,8 +99,9 @@ class MonitorController {
      */
     def control = {
         def path = DataManager.ROOT_PATH+"/setpar/"+params["pointid"]+"."+params["cmd"]
-        println("path="+path)
-        FileUtil.writeTxtFile(path,params["type"],false);
+//        println("path="+path)
+        def content = params["type"] ? params["type"] : "";
+        FileUtil.writeTxtFile(path,content,false);
         render("ok")
     }
 
@@ -471,38 +476,49 @@ class MonitorController {
         }
     }
 
-    //获取台站运行率
+    //获取每月台站运行率
     def fetchMonitorRunrate = {
-        def result = [:]
-        def netcode = params.pointid.split("\\.")[0]
-        def stacode = params.pointid.split("\\.")[1]
-        String path = DataManager.ROOT_PATH+"/trace/"+netcode+"/"+stacode+"/";
-        List<String> datelist = DateUtils.getEveryday(params.start, params.end);
+        def result = new ArrayList();
+        DataManager.curMonDataList.each { mondata ->
+            println("mondata.pointid:"+mondata.pointid)
+            def itemobj = [:]
+            itemobj["pointid"] = mondata.pointid
+            def netcode = mondata.pointid.split("\\.")[0]
+            def stacode = mondata.pointid.split("\\.")[1]
+//        if(params.pointid){
+//            def netcode = params.pointid.split("\\.")[0]
+//            def stacode = params.pointid.split("\\.")[1]
+//        }
+            String path = DataManager.ROOT_PATH+"/trace/"+netcode+"/"+stacode+"/";
+            List<String> datelist = DateUtils.getEverydayByMonth(params.month);
 
-        def ratecount = 0;
-        def data = []
-        result["data"] = data
-        for (String datestr : datelist) {
-            datestr = datestr.replaceAll("-","")
-            println("datestr="+datestr)
-            List<File> fileList = FileUtil.listFilesInDirWithFilter(path,new FileFilter() {
-                @Override
-                boolean accept(File pathname) {
+            def ratecount = 0;
+            def data = []
+//            itemobj["data"] = data
+            for (String datestr : datelist) {
+                def datename = datestr.replaceAll("-","")
+//                println("datestr="+datestr)
+                List<File> fileList = FileUtil.listFilesInDirWithFilter(path,new FileFilter() {
+                    @Override
+                    boolean accept(File pathname) {
 //                    println("name="+pathname.getName().substring(0,8))
-                    return datestr.equals(pathname.getName().substring(0,8))
-                }
-            },false);
-            double runrate = (double) fileList.size()/24
-            ratecount += runrate
-            def obj = [:]
-            obj["date"] = datestr
-            obj["runrate"] = runrate
-            data.add(obj)
+                        return datename.equals(pathname.getName().substring(0,8))
+                    }
+                },false);
+                double rate = fileList == null ? 0.0 : (double) fileList.size()/24
+                def runrate = Math.round(rate*100)
+                ratecount += runrate
+                itemobj[datestr] = runrate
+                def obj = [:]
+                obj["date"] = datestr
+                obj["runrate"] = runrate
+                data.add(obj)
+            }
+            def avgrate = ratecount/datelist.size()
+            itemobj["sumrate"] = avgrate
+            result.add(itemobj)
         }
 
-        def avgrate = ratecount/datelist.size()
-//        println("avgrate="+avgrate)
-        result["sumrate"] = avgrate
         render(result as JSON)
     }
 

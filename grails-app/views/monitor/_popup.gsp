@@ -49,7 +49,14 @@
                     <td>监测数据上传间隔</td><td><input id="SendMon" name="SendMon" style="width:120px" value="0"/></td>
                 </tr>
                 <tr>
-                    <td>工作模式</td><td><input id="WorkMode" name="WorkMode" style="width:120px" value="0"/></td>
+                    <td>工作模式</td>
+                    <td><select id="WorkMode" name="WorkMode" style="width:120px">
+                        <option value="0">4G不工作模式</option>
+                        <option value="1">4G实时数据模式</option>
+                        <option value="2">4G 非实时监测模式</option>
+                    </select>
+                        %{--<input id="WorkMode" name="WorkMode" style="width:120px" value="0"/>--}%
+                    </td>
                     <td>压控晶振拟合参数</td><td><input id="TCXO" name="TCXO" style="width:120px" value="0"/></td>
                 </tr>
                 <tr>

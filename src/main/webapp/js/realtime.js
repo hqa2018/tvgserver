@@ -645,7 +645,7 @@ function rightclick() {
                     ,value:'1'
                 }]
             },{
-                title: '下载参数'
+                title: '事件下载'
                 ,id: 'download'
             }]
             ,className: 'site-dropdown-custom'
