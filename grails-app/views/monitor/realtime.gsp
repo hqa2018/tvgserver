@@ -67,7 +67,6 @@
                 <div id="pie"></div>
                 <div>
                     <div class="pie-data">
-
                     </div>
                 </div>
             </div>

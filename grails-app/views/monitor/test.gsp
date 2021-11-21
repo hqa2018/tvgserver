@@ -2,643 +2,419 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Layui</title>
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="renderer" content="webkit"/>
+    <meta name="force-rendering" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="名榜,wangid">
+    <title>TDEMonitor地震台站监控运维管理系统</title>
+
+    <!-- CSS -->
+    <asset:stylesheet href="style.css"/>
+    <asset:stylesheet href="children.css"/>
+    %{--<link rel="stylesheet" href="css/children.css?v=003">--}%
+
+    <!-- 在线图标库 地址：http://fontawesome.dashgame.com/-->
+    <asset:stylesheet href="font-awesome.min.css"/>
+    %{--<link href="css/font-awesome.min.css" rel="stylesheet">--}%
+
+    <!-- layui css -->
     <asset:stylesheet href="layui/css/layui.css"/>
-    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+    <asset:javascript src="jquery-3.3.1.min.js"/>
+    <asset:javascript src="utils.js"/>
+    <!-- layui js -->
+    <asset:javascript src="layui/layui.js"/>
 </head>
+
 <body>
+<g:render template="popup1" />
+<div class="wangid_conbox">
+    <!-- 当前位置 -->
+    <div class="zy_weizhi bord_b">
+        <i class="fa fa-home fa-3x"></i>
+        <a>首页</a>
+        <span>台站监测数据列表</span>
+    </div>
+    <!-- 筛选 -->
+    <div class="shuaix">
+        <div class="left">
+            <select id="dev_status_select">
+                <option value="null">-筛选设备状态-</option>
+                <option value="ALL">全部</option>
+                <option value="1">触发</option>
+                <option value="2">报警</option>
+            </select>
+        </div>
+        <div class="right">
+            <input type="text" id="search_date" placeholder="请选择日期">
+            <select id="search_type_select">
+                <option value="null">-选择查询栏目-</option>
+                <option value="stacode">台站代码</option>
+                <option value="staname">台站名称</option>
+            </select>
+            <input type="text" id="search_value" placeholder="请输入关键词查询">
+            <a href="#" id="bt_searth">查询</a>
+        </div>
+    </div>
+    <!-- 下面写内容 -->
+    %{--<table class="layui-hide" id="tb_content" lay-filter="mylist"></table>--}%
+    <table class="layui-hide" id="test" lay-filter="rateEvent"></table>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="setpar">设置</a>
+        <a class="layui-btn layui-btn-xs" lay-event="more">更多<i class="layui-icon layui-icon-down"></i></a>
+        %{--<a class="layui-btn layui-btn-xs" lay-event="reboot">重启</a>--}%
+        %{--<a class="layui-btn layui-btn-xs" lay-event="monitor">采集</a>
+        <a class="layui-btn layui-btn-xs" lay-event="mode">模式</a>
+        <a class="layui-btn layui-btn-xs" lay-event="alert">报警</a>
+        <a class="layui-btn layui-btn-xs" lay-event="tf">格式化</a>
+        <a class="layui-btn layui-btn-xs" lay-event="download">下载</a>--}%
+        %{--<a class="layui-btn layui-btn-xs" lay-event="stop">停止</a>--}%
+    </script>
 
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-    <legend>初演示</legend>
-</fieldset>
-
-<div class="layui-btn-container">
-    <button class="layui-btn demo1">
-        下拉菜单
-        <i class="layui-icon layui-icon-down layui-font-12"></i>
-    </button>
-    <button class="layui-btn layui-btn-primary demo1">
-        下拉菜单
-        <i class="layui-icon layui-icon-down layui-font-12"></i>
-    </button>
+    <script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="gatherAll">批量采集</button>
+        <button class="layui-btn layui-btn-sm" lay-event="rebootAll">批量重启</button>
+        <button class="layui-btn layui-btn-sm" lay-event="modeAll">批量模式</button>
+        <button class="layui-btn layui-btn-sm" lay-event="tfAll">批量格式化</button>
+        <button class="layui-btn layui-btn-sm" lay-event="downloadAll">批量下载</button>
+    </div>
+    </script>
 </div>
-
-<div class="layui-inline" style="width: 235px;">
-    <input name="" placeholder="在输入框提供一些常用的选项" class="layui-input" id="demo2">
-</div>
-<div class="layui-inline layui-word-aux layui-font-gray">
-    可以绑定任意元素，<a href="javascript:;" class="layui-font-blue" id="demo3">比如这段文字 <i class="layui-icon layui-font-12 layui-icon-down"></i></a>
-</div>
-
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-    <legend>高级演示</legend>
-</fieldset>
-
-<div class="layui-btn-container">
-    <button class="layui-btn" id="demo100">
-        无限层级 + 跳转 + 事件 + 自定义模板
-    </button>
-</div>
-
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-    <legend>在表格中的应用</legend>
-</fieldset>
-
-<div style="max-width: 728px;">
-    <table class="layui-hide" id="test-dropdown-table" lay-filter="test-dropdown-table"></table>
-</div>
-<script type="text/html" id="test-dropdown-toolbar-barDemo">
-<a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="edit">编辑</a>
-<a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
-</script>
-<div style="margin-top: 15px">
-
-    <!-- 示例-970 -->
-    <!--
-<ins class="adsbygoogle"
-style="display:inline-block;width:970px;height:90px"
-data-ad-client="ca-pub-6111334333458862"
-data-ad-slot="3820120620"></ins>
--->
-
-</div>
-
-<fieldset class="layui-elem-field layui-field-title">
-    <legend>自定义事件</legend>
-</fieldset>
-
-<div class="layui-btn-container">
-    <button class="layui-btn layui-btn-primary" id="demo4">
-        hover
-        <i class="layui-icon layui-icon-more-vertical layui-font-12"></i>
-    </button>
-    <button class="layui-btn layui-btn-primary" id="demo5">
-        mousedown
-        <i class="layui-icon layui-icon-down layui-font-12"></i>
-    </button>
-    <button class="layui-btn layui-btn-primary" id="demo6">
-        dblclick - 双击
-        <i class="layui-icon layui-icon-circle layui-font-12"></i>
-    </button>
-</div>
-
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-    <legend>右键菜单</legend>
-</fieldset>
-
-<div class="layui-bg-gray" style="height: 260px; text-align: center;" id="demo7">
-    <span class="layui-font-gray" style="position: relative; top:50%;">在此区域单击鼠标右键</span>
-</div>
-<button class="layui-btn" style="margin-top: 15px;" lay-demoactive="rightclick">
-    开启全局右键菜单
-</button>
-
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-    <legend>弹出位置</legend>
-</fieldset>
-
-<div class="layui-btn-container">
-    <button class="layui-btn layui-btn-primary" id="demo200">
-        左对齐
-        <i class="layui-icon layui-icon-down layui-font-12"></i>
-    </button>
-    <button class="layui-btn layui-btn-primary" id="demo201">
-        居中对齐
-        <i class="layui-icon layui-icon-down layui-font-12"></i>
-    </button>
-    <button class="layui-btn layui-btn-primary" id="demo202">
-        右对齐
-        <i class="layui-icon layui-icon-down layui-font-12"></i>
-    </button>
-</div>
-
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-    <legend>重定义风格</legend>
-</fieldset>
-
-<div class="layui-btn-container">
-    <button class="layui-btn" id="demo8">
-        重定义样式
-        <i class="layui-icon layui-icon-list layui-font-14"></i>
-    </button>
-    <style>
-    .site-dropdown-demo,
-    .site-dropdown-demo .layui-menu{background-color: #052f97; border: none;}
-    .site-dropdown-demo .layui-menu li{color: #fff;}
-    .site-dropdown-demo .layui-menu li:hover{background-color: #042479;}
-    </style>
-    <button class="layui-btn" id="demo9">
-        重定义内容
-        <i class="layui-icon layui-icon-list layui-font-14"></i>
-    </button>
-</div>
-
-
-<asset:javascript src="layui/layui.js"/>
-<!-- 注意：如果你直接复制所有代码到本地，上述 JS 路径需要改成你本地的 -->
-
+%{--<div id="date_popup" style="width: 500px; height: 230px;display: none">
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="date" id="search_date" placeholder="yyyy-MM-dd" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button id="log_download" type="button" class="layui-btn layui-btn-danger layui-btn-xs">下载</button>
+            </div>
+        </div>
+    </form>
+</div>--}%
 <script>
-    layui.use(['dropdown', 'util', 'layer', 'table'], function(){
-        var dropdown = layui.dropdown
-            ,util = layui.util
-            ,layer = layui.layer
-            ,table = layui.table
-            ,$ = layui.jquery;
+    //当前选择数据列表
+    var curSelectDataList = null;
+    var select_month = "2021-11"
 
-        //初演示
-        dropdown.render({
-            elem: '.demo1'
-            ,data: [{
-                title: 'menu item11'
-                ,id: 100
-            },{
-                title: 'menu item22'
-                ,id: 101
-            },{
-                title: 'menu item33'
-                ,id: 102
-            }]
-            ,click: function(obj){
-                layer.tips('点击了：'+ obj.title, this.elem, {tips: [1, '#5FB878']})
-            }
-        });
+    function buildColumn(select_month) {
+        var cols = [];
+        var h = [
+            {type: 'checkbox', fixed: 'left'}
+            , {field: 'pointid', title: '台站代码',width:120, sort: true, align: 'center'}
+            // , {field: 'stacode', title: '台站代码', align: 'center'}
+            // , {field: 'staname', title: '台站名称', align: 'center', width: 150}
+        ]
+        var d = [];
+        for(var i=1;i<=TimeFrameUtil.daysInMonth(select_month);i++){
+            var datestr = select_month + "-" +(i < 10 ? "0"+i : i);
+            // console.log(datestr)
+            d.push({field: datestr, title: datestr.split("-")[2], width: 45,event: datestr, align: 'center'})
+        }
+        d.push({field: 'option', title: '操作', align: 'center', width: 160, toolbar: '#barDemo', fixed: 'right'})
+        cols.push($.merge(h, d));
+        return cols;
+    }
 
-        //初演示 - 绑定输入框
-        dropdown.render({
-            elem: '#demo2'
-            ,data: [{
-                title: 'menu item 1'
-                ,id: 101
-            },{
-                title: 'menu item 2'
-                ,id: 102
-            },{
-                title: 'menu item 3'
-                ,id: 103
-            },{
-                title: 'menu item 4'
-                ,id: 104
-            },{
-                title: 'menu item 5'
-                ,id: 105
-            },{
-                title: 'menu item 6'
-                ,id: 106
-            }]
-            ,click: function(obj){
-                this.elem.val(obj.title);
-            }
-            ,style: 'width: 235px;'
-        });
-
-        //初演示 - 绑定文字
-        dropdown.render({
-            elem: '#demo3'
-            ,data: [{
-                title: 'menu item 1'
-                ,id: 100
-            },{
-                title: 'menu item 2'
-                ,id: 101
-                ,child: [{  //横向子菜单
-                    title: 'menu item 2-1'
-                    ,id: 1011
-                },{
-                    title: 'menu item 2-2'
-                    ,id: 1012
-                }]
-            },{
-                title: 'menu item 3'
-                ,id: 102
-            },{
-                type: '-' //分割线
-            },{
-                title: 'menu group'
-                ,id: 103
-                ,type: 'group' //纵向菜单组
-                ,child: [{
-                    title: 'menu item 4-1'
-                    ,id: 1031
-                },{
-                    title: 'menu item 4-2'
-                    ,id: 1032
-                }]
-            },{
-                type: '-' //分割线
-            },{
-                title: 'menu item 5'
-                ,id: 104
-            },{
-                title: 'menu item 5'
-                ,id: 104
-            }]
-            ,click: function(obj){
-                this.elem.val(obj.title);
-            }
-        });
-
-        //高级演示 - 各种组合
-        dropdown.render({
-            elem: '#demo100'
-            ,data: [{
-                title: 'menu item 1'
-                ,templet: '<i class="layui-icon layui-icon-picture"></i> {{d.title}} <span class="layui-badge-dot"></span>'
-                ,id: 100
-                ,href: '#'
-            },{
-                title: 'menu item 2'
-                ,templet: '<img src="//cdn.layui.com/avatar/168.jpg?t=123" style="width: 16px;"> {{d.title}}'
-                ,id: 101
-                ,href: '/'
-                ,target: '_blank'
-            }
-                ,{type: '-'} //分割线
-                ,{
-                    title: 'menu item 3'
-                    ,id: 102
-                    ,type: 'group'
-                    ,child: [{
-                        title: 'menu item 3-1'
-                        ,id: 103
-                    },{
-                        title: 'menu item 3-2'
-                        ,id: 104
-                        ,child: [{
-                            title: 'menu item 3-2-1'
-                            ,id: 105
-                        },{
-                            title: 'menu item 3-2-2'
-                            ,id: 11
-                            ,type: 'group'
-                            ,child: [{
-                                title: 'menu item 3-2-2-1'
-                                ,id: 111
-                            },{
-                                title: 'menu item 3-2-2-2'
-                                ,id: 1111
-                            }]
-                        },{
-                            title: 'menu item 3-2-3'
-                            ,id: 11111
-                        }]
-                    },{
-                        title: 'menu item 3-3'
-                        ,id: 111111
-                        ,type: 'group'
-                        ,child: [{
-                            title: 'menu item 3-3-1'
-                            ,id: 22
-                        },{
-                            title: 'menu item 3-3-2'
-                            ,id: 222
-                            ,child: [{
-                                title: 'menu item 3-3-2-1'
-                                ,id: 2222
-                            },{
-                                title: 'menu item 3-3-2-2'
-                                ,id: 22222
-                            },{
-                                title: 'menu item 3-3-2-3'
-                                ,id: 2222222
-                            }]
-                        },{
-                            title: 'menu item 3-3-3'
-                            ,id: 333
-                        }]
-                    }]
-                }
-                ,{type: '-'}
-                ,{
-                    title: 'menu item 4'
-                    ,id: 4
-                },{
-                    title: 'menu item 5'
-                    ,id: 5
-                    ,child: [{
-                        title: 'menu item 5-1'
-                        ,id: 55
-                        ,child: [{
-                            title: 'menu item 5-1-1'
-                            ,id: 5555
-                        },{
-                            title: 'menu item 5-1-2'
-                            ,id: 55555
-                        },{
-                            title: 'menu item 5-1-3'
-                            ,id: 555555
-                        }]
-                    },{
-                        title: 'menu item 5-2'
-                        ,id: 52
-                    },{
-                        title: 'menu item 5-3'
-                        ,id: 53
-                    }]
-                },{type:'-'},{
-                    title: 'menu item 6'
-                    ,id: 66
-                    ,type: 'group'
-                    ,isSpreadItem: false
-                    ,child: [{
-                        title: 'menu item 6-1'
-                        ,id: 666
-                    },{
-                        title: 'menu item 6-2'
-                        ,id: 6666
-                    },{
-                        title: 'menu item 6-3'
-                        ,id: 66666
-                    }]
-                }]
-            ,click: function(item){
-                layer.msg(util.escape(JSON.stringify(item)));
-            }
-        });
-
-        // dropdown 在表格中的应用
-        table.render({
-            elem: '#test-dropdown-table'
-            ,url: '/test/table/demo5.json'
-            ,title: '用户数据表'
-            ,cols: [[
-                {type: 'checkbox', fixed: 'left'}
-                ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true}
-                ,{field:'username', title:'用户名', width:120, edit: 'text'}
-                ,{field:'email', title:'邮箱', minWidth:150}
-                ,{fixed: 'right', title:'操作', toolbar: '#test-dropdown-toolbar-barDemo', width:150}
-            ]]
-            ,limits: [3]
-            ,page: true
-        });
-        //行工具事件
-        table.on('tool(test-dropdown-table)', function(obj){
-            var that = this
-                ,data = obj.data;
-
-            if(obj.event === 'edit'){
-                layer.prompt({
-                    formType: 2
-                    ,value: data.email
-                }, function(value, index){
-                    obj.update({
-                        email: value
-                    });
-                    layer.close(index);
-                });
-            } else if(obj.event === 'more'){
-                //更多下拉菜单
-                dropdown.render({
-                    elem: that
-                    ,show: true //外部事件触发即显示
-                    ,data: [{
-                        title: 'item 1'
-                        ,id: 'aaa'
-                    }, {
-                        title: 'item 2'
-                        ,id: 'bbb'
-                    }, {
-                        title: '删除'
-                        ,id: 'del'
-                    }]
-                    ,click: function(data, othis){
-                        //根据 id 做出不同操作
-                        if(data.id === 'del'){
-                            layer.confirm('真的删除行么', function(index){
-                                obj.del();
-                                layer.close(index);
-                            });
-                        } else {
-                            layer.msg('得到表格下拉菜单 id：'+ data.id);
+    //构建列表显示
+    function renderMonitorData() {
+        layui.use(['table','dropdown','laydate'], function(){
+            var laydate = layui.laydate
+            var dropdown = layui.dropdown;
+            var table = layui.table;
+            table.render({
+                elem: '#test'
+                ,id:"quality"
+                , toolbar: '#toolbarDemo'//工具栏
+                // ,url:'/demo/table/user.json'
+                ,cellMinWidth: 30 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,cols: buildColumn(select_month)
+                ,data: curSelectDataList
+                ,done: function (res, curr, count) {
+                    $('th').css({ 'background-color':'#bdccea', 'color': 'black', 'font-weight': '500', 'font-size': '8px', 'line-height':'10px' });
+                    for(var i in res.data){
+                        var item = res.data[i];		//获取当前行数据
+                        for(var d=1;d<=TimeFrameUtil.daysInMonth(select_month);d++){
+                            var datestr = select_month + "-" +(d < 10 ? "0"+d : d);
+                            console.log(item[datestr])
+                            if(item[datestr] == 100) {
+                                $('div[lay-id="quality"]').
+                                find('tr[data-index="' + i + '"]').
+                                find('td[data-field="'+datestr+'"]').
+                                css('background-color', '#59ff00');
+                            }else if(item[datestr] > 0){
+                                $('div[lay-id="quality"]').
+                                find('tr[data-index="' + i + '"]').
+                                find('td[data-field="'+datestr+'"]').
+                                css('background-color', '#ffaa00');
+                            }else{
+                                $('div[lay-id="quality"]').
+                                find('tr[data-index="' + i + '"]').
+                                find('td[data-field="'+datestr+'"]').
+                                css('background-color', '#a1a1a1');
+                            }
                         }
+                        // if (item.Estimate == 0)
+                        //     $('div[lay-id="quality"]').
+                        //     find('tr[data-index="' + index + '"]').
+                        //     find('td[data-field="Estimate"]').
+                        //     css('background-color', '#FF5722');
+                        // else
+                        //     $('div[lay-id="quality"]').
+                        //     find('tr[data-index="' + index + '"]').
+                        //     find('td[data-field="Estimate"]').
+                        //     css('background-color', '#009688');
                     }
-                    ,align: 'right' //右对齐弹出（v2.6.8 新增）
-                    ,style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' //设置额外样式
+
+                }
+            });
+
+            laydate.render({
+                elem: '#search_date' //指定元素
+                ,value: select_month
+                ,type: 'month'
+                ,isInitValue: true
+                ,done: function(value, date){
+                    alert("选中："+value)
+                    select_month = value;
+                    fetchLastData()
+                }
+            });
+
+            //监听单元格事件
+            table.on('tool(rateEvent)', function(obj){
+                var that = this
+                var data = obj.data;
+                var devcode = data["devcode"];
+                var pointid = data["pointid"];
+                if(obj.event === "setpar"){
+                    popupCenter($("#staInfoTable").parent())    //弹窗居中
+                    $("#staInfoTable").parent().css("display", "block");
+                    getStaPar(devcode);
+                }else if(obj.event === "more"){
+                    //更多下拉菜单
+                    dropdown.render({
+                        elem: that
+                        ,show: true //外部事件触发即显示
+                        ,data: [{
+                            title: '重启设备'
+                            ,type:'control'
+                            ,id: 'reboot'
+                        },{
+                            title: '采集数据'
+                            ,type:'control'
+                            ,id: 'monitor'
+                        },{
+                            title: '设置报警'
+                            ,type:'control'
+                            ,id: 'alert'
+                        },{
+                            title: '工作模式'
+                            ,id: '#3'
+                            ,child: [{
+                                title: '4G不工作模式'
+                                ,type:'control'
+                                ,id: 'mode'
+                                ,value:'0'
+                            },{
+                                title: '4G实时数据模式'
+                                ,type:'control'
+                                ,id: 'mode'
+                                ,value:'1'
+                            },{
+                                title: '4G 非实时监测模式'
+                                ,type:'control'
+                                ,id: 'mode'
+                                ,value:'2'
+                            }]
+                        },{
+                            title: 'TF卡格式化'
+                            ,id: '#3'
+                            ,child: [{
+                                title: '格式化为 FM_FAT32'
+                                ,type:'control'
+                                ,id: 'tf'
+                                ,value:'0'
+                            },{
+                                title: '格式化为 FM_EXFAT'
+                                ,type:'control'
+                                ,id: 'tf'
+                                ,value:'1'
+                            }]
+                        },{
+                            title: '数据下载'
+                            ,id: 'download'
+                        }]
+                        ,click: function(obj, othis){
+                            if(obj.id === 'download'){
+                                alert("打开数据下载窗口")
+                            }else{
+                                //设备控制
+                                if(obj.type == "control"){
+                                    if(confirm("确定对"+pointid+"执行指令?")){
+                                        $.get("../monitor/control",{pointid:pointid,cmd:obj.id,type:obj.value},function (resp) {
+                                            alert(pointid+"成功执行指令");
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        ,align: 'right' //右对齐弹出（v2.6.8 新增）
+                        // ,style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' //设置额外样式
+                    });
+                }else{
+                    var field = obj.event;
+                    var value = data[devcode];
+                    dropdown.render({
+                        elem: that
+                        ,show: true //外部事件触发即显示
+                        ,data: [{
+                            title: '查看波形数据'
+                            ,id: 'waveform'
+                        }, {
+                            title: '下载实时数据'
+                            ,id: 'trace'
+                        }, {
+                            title: '下载触发事件'
+                            ,id: 'trigger'
+                        }]
+                        ,click: function(data, othis){
+                            //根据 id 做出不同操作
+                            if(data.id === 'waveform'){
+                                window.open("../monitor/devdata?devcode="+devcode+"&date="+field)
+                            } else if(data.id === 'trace') {
+                                layer.msg('得到表格下拉菜单 id：'+ data.id);
+                            }
+                        }
+                        ,align: 'right' //右对齐弹出（v2.6.8 新增）
+                        ,style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' //设置额外样式
+                    });
+                }
+                // layer.prompt({
+                //     formType: 2
+                //     ,title: '修改 ID 为 ['+ data.id +'] 的用户签名'
+                //     ,value: data.sign
+                // }, function(value, index){
+                //     layer.close(index);
+                //     //这里一般是发送修改的Ajax请求
+                //     //同步更新表格和缓存对应的值
+                //     obj.update({
+                //         sign: value
+                //     });
+                // });
+            });
+        });
+    }
+
+    //下载更新台站监测数据信息
+    function fetchLastData() {
+        $.getJSON("../monitor/fetchMonitorRunrate",{month:select_month},function (result) {
+            curSelectDataList = result;
+            renderMonitorData();
+        });
+        /*$.ajax({
+            ///monitor/fetchMonitorRunrate?pointid=CN.23540&month=2021-11
+            url: "../monitor/fetchMonitorRunrate.json?t=" + new Date().getTime(), success: function (result) {
+                lastMonitorDataList = result;
+                console.log("Downloa real_monitor_data.json succ...");
+                for (var it in lastMonitorDataList) {
+                    if (lastMonitorDataDict[lastMonitorDataList[it].recorder] == null) {
+                        lastMonitorDataDict[lastMonitorDataList[it].recorder] = [];
+                    }
+                    lastMonitorDataList[it].status = parseDevStatus(lastMonitorDataList[it])
+                    lastMonitorDataDict[lastMonitorDataList[it].recorder].push(lastMonitorDataList[it])
+                }
+                //console.log(lastMonitorDataDict);
+                var dev_type = $("#dev_type_select").val()=="null"?"ALL":$("#dev_type_select").val();
+                renderMonitorDataByDevType(dev_type);
+            }
+        });*/
+    }
+
+    //设备控制指令
+    function devcontrol(pointid,cmd,type){
+        if(confirm("确定对"+pointid+"执行指令?")){
+            $.get("../monitor/control",{pointid:pointid,cmd:cmd,type:type},function (resp) {
+                alert(pointid+"成功执行指令");
+            });
+        }
+    }
+
+    /**
+     * 获取基础参数
+     * @param type
+     */
+    function getStaPar(type){
+        $.getJSON("../monitor/getdevinfo",{code:cur_devcode},function (result) {
+            $("#staInfoTable").parent().show();
+            $.each(result,function (key,value) {
+                // console.log("key:"+value)
+                $("#"+key).val(value);
+            });
+            for(var i=0;i<3;i++){
+                $("#ChCode"+i).val(result["ChCode"].split(",")[i]);
+                $("#LocID"+i).val(result["LocID"].split(",")[i]);
+                $("#Gain"+i).val(result["Gain"].split(",")[i]);
+                $("#SensorMode"+i).val(result["SensorMode"].split(",")[i]);
+                $("#SensorSen"+i).val(result["SensorSen"].split(",")[i]);
+                $("#SensorLow"+i).val(result["SensorLow"].split(",")[i]);
+                $("#SensorHigh"+i).val(result["SensorHigh"].split(",")[i]);
+                $("#DataHP"+i).val(result["DataHP"].split(",")[i]);
+            }
+            //"NetCode":"SH","StaCode":"49811"
+            $(".stapar_title").text("["+result["NetCode"]+"."+result["StaCode"]+"]台站参数修改");
+            $("#saveParam").val(result["NetCode"]+"."+result["StaCode"]);
+        });
+    }
+
+    $(function () {
+        fetchLastData()
+
+        $(".stapar_close").on("click",function () {
+            $("#staInfoTable").parent().hide();
+        });
+        //保存参数
+        $(".save_params").click(function () {
+            var staid = $(this).attr("id");
+            var message = "您确定要执行保存[" + staid + "]参数操作吗?";
+            var ChCode = [];
+            var LocID = [];
+            var Gain = [];
+            var SensorMode = [];
+            var SensorSen = [];
+            var SensorLow = [];
+            var SensorHigh = [];
+            var DataHP = [];
+            for(var i=0;i<3;i++){
+                ChCode.push($("#ChCode"+i).val());
+                LocID.push($("#LocID"+i).val());
+                Gain.push($("#Gain"+i).val());
+                SensorMode.push($("#SensorMode"+i).val());
+                SensorSen.push($("#SensorSen"+i).val());
+                SensorLow.push($("#SensorLow"+i).val());
+                SensorHigh.push($("#SensorHigh"+i).val());
+                DataHP.push($("#DataHP"+i).val());
+            }
+            $("#ChCode").val(ChCode.toString());
+            $("#LocID").val(LocID.toString());
+            $("#Gain").val(Gain.toString());
+            $("#SensorMode").val(SensorMode.toString());
+            $("#SensorSen").val(SensorSen.toString());
+            $("#SensorLow").val(SensorLow.toString());
+            $("#SensorHigh").val(SensorHigh.toString());
+            $("#DataHP").val(DataHP.toString());
+            if (confirm(message)) {
+                $.post("/static/monitor/savepar",$("#par_form").serialize(),function (resp) {
+                    alert(resp);
                 });
             }
         });
-
-        //自定义事件 - hover
-        dropdown.render({
-            elem: '#demo4'
-            ,trigger: 'hover'
-            ,data: [{
-                title: 'menu item 1'
-                ,id: 100
-            },{
-                title: 'menu item 2'
-                ,id: 101
-            },{
-                title: 'menu item 3'
-                ,id: 102
-            }]
-        });
-
-        //自定义事件 - mousedown
-        dropdown.render({
-            elem: '#demo5'
-            ,trigger: 'mousedown'
-            ,data: [{
-                title: 'menu item 1'
-                ,id: 100
-            },{
-                title: 'menu item 2'
-                ,id: 101
-            },{
-                title: 'menu item 3'
-                ,id: 102
-            }]
-        });
-
-        //自定义事件 - dblclick
-        dropdown.render({
-            elem: '#demo6'
-            ,trigger: 'dblclick'
-            ,data: [{
-                title: 'menu item 1'
-                ,id: 100
-            },{
-                title: 'menu item 2'
-                ,id: 101
-            },{
-                title: 'menu item 3'
-                ,id: 102
-            }]
-        });
-
-        //右键菜单
-        var inst = dropdown.render({
-            elem: '#demo7' //也可绑定到 document，从而重置整个右键
-            ,trigger: 'contextmenu' //contextmenu
-            ,isAllowSpread: false //禁止菜单组展开收缩
-            ,style: 'width: 200px' //定义宽度，默认自适应
-            ,id: 'test777' //定义唯一索引
-            ,data: [{
-                title: 'menu item 1'
-                ,id: 'test'
-            }, {
-                title: 'Printing'
-                ,id: 'print'
-            },{
-                title: 'Reload'
-                ,id: 'reload'
-            },{type:'-'},{
-                title: 'menu item 3'
-                ,id: '#3'
-                ,child: [{
-                    title: 'menu item 3-1'
-                    ,id: '#1'
-                },{
-                    title: 'menu item 3-2'
-                    ,id: '#2'
-                },{
-                    title: 'menu item 3-3'
-                    ,id: '#3'
-                }]
-            },{type:'-'},{
-                title: 'menu item 4'
-                ,id: ''
-            },{
-                title: 'menu item 5'
-                ,id: '#1'
-            },{
-                title: 'menu item 6'
-                ,id: '#1'
-            }]
-            ,click: function(obj, othis){
-                if(obj.id === 'test'){
-                    layer.msg('click');
-                } else if(obj.id === 'print'){
-                    window.print();
-                } else if(obj.id === 'reload'){
-                    location.reload();
-                }
-                console.log(othis.html());
-            }
-        });
-
-        //对齐方式
-        dropdown.render({
-            elem: '#demo200'
-            ,data: [{
-                title: 'menu item test 111'
-                ,id: 100
-            },{
-                title: 'menu item test 222'
-                ,id: 101
-            },{
-                title: 'menu item test 333'
-                ,id: 102
-            }]
-        });
-        dropdown.render({
-            elem: '#demo201'
-            ,align: 'center' //居中对齐（2.6.8 新增）
-            ,data: [{
-                title: 'menu item test 111'
-                ,id: 100
-            },{
-                title: 'menu item test 222'
-                ,id: 101
-            },{
-                title: 'menu item test 333'
-                ,id: 102
-            }]
-        });
-        dropdown.render({
-            elem: '#demo202'
-            ,align: 'right' //右对齐（2.6.8 新增）
-            ,data: [{
-                title: 'menu item test 111'
-                ,id: 100
-            },{
-                title: 'menu item test 222'
-                ,id: 101
-            },{
-                title: 'menu item test 333'
-                ,id: 102
-            }]
-        });
-
-
-        //重定义样式
-        dropdown.render({
-            elem: '#demo8'
-            ,data: [{
-                title: 'menu item 1'
-                ,id: 100
-            },{
-                title: 'menu item 2'
-                ,id: 101
-            },{
-                title: 'menu item 3'
-                ,id: 103
-            },{
-                title: 'menu item 4'
-                ,id: 104
-            },{
-                title: 'menu item 5'
-                ,id: 105
-            },{
-                title: 'menu item 6'
-                ,id: 106
-            }]
-            ,className: 'site-dropdown-demo'
-            ,ready: function(elemPanel, elem){
-                layer.msg('定义了一个 className');
-            }
-        });
-
-        //重定义内容
-        dropdown.render({
-            elem: '#demo9'
-            ,content: ['<div class="layui-tab layui-tab-brief">'
-                ,'<ul class="layui-tab-title">'
-                ,'<li class="layui-this">Tab header 1</li>'
-                ,'<li>Tab header 2</li>'
-                ,'<li>Tab header 3</li>'
-                ,'</ul>'
-                ,'<div class="layui-tab-content">'
-                ,'<div class="layui-tab-item layui-text layui-show"><p style="padding-bottom: 10px;">在 content 参数中插入任意的 html 内容，可替代默认的下拉菜单。 从而实现更多有趣的弹出内容。</p><p> 是否发现，dropdown 组件不仅仅只是一个下拉菜单或者右键菜单，它能被赋予许多的想象可能。</p></div>'
-                ,'<div class="layui-tab-item">Tab body 2</div>'
-                ,'<div class="layui-tab-item">Tab body 3</div>'
-                ,'</div>'
-                ,'</div>'].join('')
-            ,style: 'width: 370px; height: 200px; padding: 0 15px; box-shadow: 1px 1px 30px rgb(0 0 0 / 12%);'
-            ,ready: function(){
-                layui.use('element', function(element){
-                    element.render('tab');
-                });
-            }
-        });
-
-
-        //其他操作
-        util.event('lay-demoactive', {
-            //全局右键菜单
-            rightclick: function(othis){
-                if(!othis.data('open')){
-                    dropdown.reload('test777', {
-                        elem: document //将事件直接绑定到 document
-                    });
-                    layer.msg('已开启全局右键菜单，请尝试在页面任意处单击右键。')
-                    othis.html('取消全局右键菜单');
-                    othis.data('open', true);
-                } else {
-                    dropdown.reload('test777', {
-                        elem: '#demo7' //重新绑定到指定元素上
-                    });
-                    layer.msg('已取消全局右键菜单，恢复默认右键菜单')
-                    othis.html('开启全局右键菜单');
-                    othis.data('open', false);
-                }
-            }
-        })
-    });
+    })
 </script>
-
-
 </body>
 </html>

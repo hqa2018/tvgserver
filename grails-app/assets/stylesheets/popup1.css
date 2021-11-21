@@ -1,0 +1,37 @@
+/*弹出窗样式*/
+.table_info{
+    border: 2px solid #3cc9ec;
+    position: absolute;
+    z-index: 99;
+    left: 5px;
+    top: 5px;
+    display: none;
+    background-color: #ffffff;
+    text-align: center;
+}
+
+.table_info button{
+    cursor: pointer;
+    background: #747577;
+    margin: 5px 0;
+    border: 0px solid #fff;
+    padding: 3px 10px;
+}
+
+.table_info input,select{
+    width: 100%;
+}
+
+.table_info .info-table tr td {
+    padding: 8px;
+    border: 1px solid #545454;
+}
+
+.table_info .info-table input,select {
+    background: #ffffff;
+    border: 0px solid #000;
+    width: 280px;
+}
+
+
+

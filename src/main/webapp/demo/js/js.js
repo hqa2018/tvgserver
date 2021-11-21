@@ -82,7 +82,11 @@ function fetchDevList() {
 function initParams() {
     DEV_CODE = $("#devcode").val();
     $("#startTime").val(TimeFrameUtil.format(new Date(),"yyyy-MM-dd"))
-    $("#startTime").val("2021-08-29")
+    if($("#date").val() == ""){
+        $("#startTime").val(TimeFrameUtil.format(new Date(),"yyyy-MM-dd"));
+    }else{
+        $("#startTime").val($("#date").val());
+    }
     mdate = $("#startTime").val();
 }
 

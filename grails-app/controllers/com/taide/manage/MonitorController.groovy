@@ -482,6 +482,7 @@ class MonitorController {
         DataManager.curMonDataList.each { mondata ->
             println("mondata.pointid:"+mondata.pointid)
             def itemobj = [:]
+            itemobj["devcode"] = mondata.devcode
             itemobj["pointid"] = mondata.pointid
             def netcode = mondata.pointid.split("\\.")[0]
             def stacode = mondata.pointid.split("\\.")[1]
@@ -556,7 +557,8 @@ class MonitorController {
             String datetime = line.split(",")[0]
             timearr.add(datetime.split(" ")[1])
             def data = line.split(",")
-            for(int j=1;j<data.size();j++){
+            println("data.size():"+data.size())
+            for(int j=1;j<17;j++){
                 if(i==0){
                     datamap["ch"+j] = new ArrayList()
                 }
@@ -568,6 +570,37 @@ class MonitorController {
 //            println("datetime:"+date.getTime())
         }
         render(datamap as JSON)
+    }
+
+    //下载实时数据
+    def downloadTraceData = {
+        def netcode = params.pointid.split("\\.")[0]
+        def stacode = params.pointid.split("\\.")[1]
+        def datestr = params.date.replaceAll("-","")
+        String path = DataManager.ROOT_PATH+"/trace/"+netcode+"/"+stacode+"/"
+        //过滤获取目录
+        ArrayList<File> traceList = FileUtil.listFilesInDirWithFilter(path,new FileFilter() {
+            @Override
+            boolean accept(File pathname) {
+//                println(pathname.getName().substring(0,8))
+                return datestr.equals(pathname.getName().substring(0,8))
+            }
+        },false);
+        println("traceList="+traceList.size())
+        for(File file:traceList){
+            println(file.getAbsolutePath())
+            fileDownload(file.getAbsolutePath())
+        }
+    }
+
+    //下载实时日志
+    def downloadTraceLog = {
+        def netcode = params.pointid.split("\\.")[0]
+        def stacode = params.pointid.split("\\.")[1]
+        def datestr = params.date.replaceAll("-","")
+        //CN\22435\monitor
+        String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/monitor/"+datestr+".txt"
+        fileDownload(path)
     }
 
 
@@ -767,6 +800,7 @@ class MonitorController {
         out.close()
         inputStream.close()
     }
+
 
     /**
      * 字符编码

@@ -81,6 +81,7 @@ button:hover {
 <script type="text/javascript" src="${request.getContextPath()}/static/demo/js/echarts.min.js"></script>
 <script language="JavaScript" src="${request.getContextPath()}/static/demo/js/js.js"></script>
 <body>
+<input id="date" style="display: none" value="${params.date}"/>
 <input id="devcode" style="display: none" value="${params.devcode}"/>
 <div class="canvas" style="opacity: .2">
     <iframe frameborder="0" src="${request.getContextPath()}/static/demo/js/index.html" style="width: 100%; height: 100%"></iframe>
