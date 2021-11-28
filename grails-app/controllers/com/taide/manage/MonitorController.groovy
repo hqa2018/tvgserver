@@ -6,6 +6,7 @@ import com.taide.system.SystemConfig
 import com.taide.util.DateUtils
 import com.taide.util.FileUtil
 import com.taide.util.NumberUtils
+import com.taide.util.ZipUtil
 import grails.converters.JSON
 import org.apache.commons.lang3.StringUtils
 
@@ -735,10 +736,26 @@ class MonitorController {
             }
         },false);
         println("traceList="+traceList.size())
+        def paths = ""
         for(File file:traceList){
-            println(file.getAbsolutePath())
-            fileDownload(file.getAbsolutePath())
+//            println(file.getAbsolutePath())
+            paths += paths == "" ? file.getAbsolutePath() : "," + file.getAbsolutePath()
+//            fileDownload(file.getAbsolutePath())
         }
+        println("paths="+paths)
+        String downloadpath = DataManager.ROOT_PATH+"/temp/"+datestr+".zip"
+        //删除已存在的文件
+        File file = new File(downloadpath)
+        if(file.exists()){
+            file.delete()
+        }
+
+        downloadpath = System.getProperty("catalina.home")+"/webapp/temp/"+datestr+".zip"
+        println("downloadpath="+downloadpath)
+        if(paths.length() > 0 ){
+            ZipUtil.zip(paths,downloadpath)
+        }
+        render(datestr+".zip")
     }
 
     //下载实时日志

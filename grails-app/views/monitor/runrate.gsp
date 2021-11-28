@@ -292,10 +292,10 @@
                             title: '下载实时日志'
                             ,id: 'tracelog'
                         }
-                        /*, {
+                        , {
                             title: '下载实时数据'
                             ,id: 'trace'
-                        }*/
+                        }
                         /*, {
                             title: '下载触发事件'
                             ,id: 'trigger'
@@ -308,6 +308,11 @@
                             } else if(data.id === 'tracelog') {
                                 // layer.msg('得到表格下拉菜单 id：'+ data.id);
                                 window.open("../monitor/downloadTraceLog?pointid="+pointid+"&date="+field)
+                            } else if(data.id === "trace"){
+                                $.get("../monitor/downloadTraceData?pointid="+pointid+"&date="+field,function (resp) {
+                                    alert(resp)
+                                    window.open("/temp/"+resp)
+                                })
                             }
                         }
                         ,align: 'right' //右对齐弹出（v2.6.8 新增）

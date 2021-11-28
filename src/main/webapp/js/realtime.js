@@ -650,7 +650,7 @@ function rightclick() {
                 ,type:'control'
                 ,id: 'reboot'
             },{
-                title: '获取状态数据'
+                title: '采集状态数据'
                 ,type:'control'
                 ,id: 'monitor'
             }
