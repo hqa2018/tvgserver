@@ -27,7 +27,7 @@ class MonitorController {
      * 页面action
      * */
     def realtime () {
-
+//        dataManagerService.updateParData()
     }
 
     def _realtime () {
@@ -35,7 +35,7 @@ class MonitorController {
     }
 
     def mapview () {
-
+//        dataManagerService.updateParData()
     }
 
     def popup(){
@@ -55,6 +55,10 @@ class MonitorController {
     }
 
     def runrate(){
+//        dataManagerService.updateParData()
+    }
+
+    def matrix(){
 
     }
 
@@ -150,7 +154,7 @@ class MonitorController {
         def result = FileUtil.writeTxtFile(DataManager.ROOT_PATH+"/setpar/"+params["NetCode"]+"."+params["StaCode"]+".par",content,false);
         //保存成功后更新基础数据缓存
         if(result){
-            dataManagerService.updateBaseInfoData()
+            dataManagerService.updateParData()
             render(1)
         }else{
             render(0)
@@ -478,6 +482,86 @@ class MonitorController {
 
     //获取每月台站运行率
     def fetchMonitorRunrate = {
+        println("fetchMonitorRunrate")
+        def result = new ArrayList();
+        DataManager.curMonDataList.each { mondata ->
+            println("mondata.pointid:"+mondata.pointid)
+            def itemobj = [:]
+            itemobj["devcode"] = mondata.devcode
+            itemobj["pointid"] = mondata.pointid
+            def netcode = mondata.pointid.split("\\.")[0]
+            def stacode = mondata.pointid.split("\\.")[1]
+            //D:\Download\data\CN\22435\monitor
+            List<String> datelist = DateUtils.getEverydayByMonth(params.month);
+            def ratecount = 0;
+            def data = []
+            for (String datestr : datelist) {
+                String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/monitor/"+datestr.replaceAll("-","")+".txt";
+                ArrayList<String> linelist = FileUtil.readFileContent(path,"utf-8")
+                def datamap = [:]
+                for(String line : linelist){
+                    datamap[line.split(",")[0].substring(0,15)] = line
+                }
+                double rate = datamap == null ? 0.0 : (double) datamap.size()/144
+                def runrate = Math.round(rate*100)
+                ratecount += runrate
+                itemobj[datestr] = runrate
+                def obj = [:]
+                obj["date"] = datestr
+                obj["runrate"] = runrate
+                data.add(obj)
+            }
+            def avgrate = ratecount/datelist.size()
+            itemobj["sumrate"] = avgrate
+            result.add(itemobj)
+        }
+
+        render(result as JSON)
+    }
+    /*def fetchMonitorRunrate0 = {
+        println("fetchMonitorRunrate")
+        def result = new ArrayList();
+        DataManager.curMonDataList.each { mondata ->
+            println("mondata.pointid:"+mondata.pointid)
+            def itemobj = [:]
+            itemobj["devcode"] = mondata.devcode
+            itemobj["pointid"] = mondata.pointid
+            def netcode = mondata.pointid.split("\\.")[0]
+            def stacode = mondata.pointid.split("\\.")[1]
+//        if(params.pointid){
+//            def netcode = params.pointid.split("\\.")[0]
+//            def stacode = params.pointid.split("\\.")[1]
+//        }
+            //D:\Download\data\CN\22435\monitor
+            List<String> datelist = DateUtils.getEverydayByMonth(params.month);
+            def ratecount = 0;
+            def data = []
+            for (String datestr : datelist) {
+                String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/monitor/"+datestr.replaceAll("-","")+".txt";
+                ArrayList<String> linelist = FileUtil.readFileContent(path,"utf-8")
+                def datamap = [:]
+                for(String line : linelist){
+                    datamap[line.split(",")[0].substring(0,16)] = line
+                }
+                double rate = datamap == null ? 0.0 : (double) datamap.size()/1440
+                def runrate = Math.round(rate*100)
+                ratecount += runrate
+                itemobj[datestr] = runrate
+                def obj = [:]
+                obj["date"] = datestr
+                obj["runrate"] = runrate
+                data.add(obj)
+            }
+            def avgrate = ratecount/datelist.size()
+            itemobj["sumrate"] = avgrate
+            result.add(itemobj)
+        }
+
+        render(result as JSON)
+    }*/
+
+
+    def fetchMonitorRunrate1 = {
         def result = new ArrayList();
         DataManager.curMonDataList.each { mondata ->
             println("mondata.pointid:"+mondata.pointid)
@@ -498,7 +582,6 @@ class MonitorController {
 //            itemobj["data"] = data
             for (String datestr : datelist) {
                 def datename = datestr.replaceAll("-","")
-//                println("datestr="+datestr)
                 List<File> fileList = FileUtil.listFilesInDirWithFilter(path,new FileFilter() {
                     @Override
                     boolean accept(File pathname) {
@@ -536,41 +619,106 @@ class MonitorController {
 //        dataManagerService.gethistorydata();
         render("success")
     }
-    //获取设备基础数据信息
 
     //获取设备历史数据信息
-    def getMonStoreData = {
+    def getWaveformData = {
         println "params.pointid="+params.pointid
         def datestr = params.date.replaceAll("-","")
-        println "datestr="+datestr
+//        println "datestr="+datestr
         def netcode = params.pointid.split("\\.")[0]
         def stacode = params.pointid.split("\\.")[1]
 //        datestr = "20210829"
+        def result = [:]
         String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/monitor/"+datestr+".txt"
-//        println(path)
-        ArrayList list = FileUtil.readFileContent(path,"utf-8");
+        ArrayList<String> linelist = FileUtil.readFileContent(path,"utf-8")
+        println("linelist:"+linelist.size())
         def datamap = [:]
-        def timearr = []
-        datamap.time = timearr
-        for(int i=0;i<list.size();i++){
-            String line = list.get(i)
-            String datetime = line.split(",")[0]
-            timearr.add(datetime.split(" ")[1])
-            def data = line.split(",")
-            println("data.size():"+data.size())
-            for(int j=1;j<17;j++){
-                if(i==0){
-                    datamap["ch"+j] = new ArrayList()
-                }
-                datamap["ch"+j].add(data[j])
-            }
-//            ch1.add([DateUtil.parseDateNewFormat(datetime).getTime(),data[1]])
-//            println("datetime:"+datetime)
-//            Date date = DateUtil.parseDefault(datatime)
-//            println("datetime:"+date.getTime())
+        for(String line : linelist){
+            datamap[line.split(",")[0].substring(0,15)] = line
         }
-        render(datamap as JSON)
+        println("-----------------")
+        def timearr = []
+        result.time = timearr
+        for(int i=0;i<144;i++){
+            Date begin = DateUtils.string2Date(params.date, DateUtils.FormatType.yyyy_MM_dd);
+            String minstr = DateUtils.date2String(DateUtils.getNextMinute(begin,i*10), DateUtils.FormatType.yyyy_MM_dd_HH_mm);
+            timearr.add(minstr.split(" ")[1])
+//            System.out.println(getNextMinute(begin,i));
+            //初始化数组
+            if(i==0){
+                for(int j=1;j<17;j++){
+                    result["ch"+j] = new ArrayList()
+                }
+            }
+            def line = datamap[minstr.substring(0,15)]
+            if(line){
+                //有数据情况
+                def data = line.split(",")
+                println("data.size():"+data.size())
+                for(int j=1;j<17;j++){
+                    result["ch"+j].add(data[j])
+                }
+            }else{
+                //数据中断情况
+                for(int j=1;j<17;j++){
+                    result["ch"+j].add("")
+                }
+            }
+        }
+        render(result as JSON)
     }
+
+    //每分钟波形数据
+    /*def getWaveformData0 = {
+        println "params.pointid="+params.pointid
+        def datestr = params.date.replaceAll("-","")
+//        println "datestr="+datestr
+        def netcode = params.pointid.split("\\.")[0]
+        def stacode = params.pointid.split("\\.")[1]
+//        datestr = "20210829"
+        def result = [:]
+        String path = DataManager.ROOT_PATH+"/data/"+netcode+"/"+stacode+"/monitor/"+datestr+".txt"
+        ArrayList<String> linelist = FileUtil.readFileContent(path,"utf-8")
+        println("linelist:"+linelist.size())
+        def datamap = [:]
+        for(String line : linelist){
+//            println("line:"+line.split(",")[0].substring(0,16))
+            datamap[line.split(",")[0].substring(0,16)] = line
+        }
+        println("-----------------")
+        def timearr = []
+        result.time = timearr
+        for(int i=0;i<1440;i++){
+            Date begin = DateUtils.string2Date(params.date, DateUtils.FormatType.yyyy_MM_dd);
+            String minstr = DateUtils.date2String(DateUtils.getNextMinute(begin,i), DateUtils.FormatType.yyyy_MM_dd_HH_mm);
+            timearr.add(minstr)
+//            println(minstr)
+//            println(datamap[minstr])
+//            System.out.println(getNextMinute(begin,i));
+            //初始化数组
+            if(i==0){
+                for(int j=1;j<17;j++){
+                    result["ch"+j] = new ArrayList()
+                }
+            }
+            def line = datamap[minstr]
+            if(line){
+                //有数据情况
+                def data = line.split(",")
+                println("data.size():"+data.size())
+                for(int j=1;j<17;j++){
+                    result["ch"+j].add(data[j])
+                }
+            }else{
+                //数据中断情况
+                for(int j=1;j<17;j++){
+                    result["ch"+j].add("")
+                }
+            }
+        }
+
+        render(result as JSON)
+    }*/
 
     //下载实时数据
     def downloadTraceData = {

@@ -1,45 +1,56 @@
-//var source_url = "http://120.25.123.11:8080"
-var source_url = "http://120.77.148.191:8088/res/mapsource/"
-// var source_url = "/res/mapsource/"
+var source_url = "https://t2.tianditu.gov.cn/"
+var apikey = "1c7ba640301d044d76b041a3178a3a72"
 //var source_url = $("#mapTileServer").val() + "/seidata/map/"
 //道路图底图
 var tmap_roadlayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: source_url + "tianditu/general/roadmap/{z}/{x}/{y}.png"
+        url: source_url + "vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles"
+        +"&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk="+apikey
+      // url: source_url + "tianditu/general/roadmap/{z}/{x}/{y}.png"
     })
 });
 
 //道路图标注层
 var tmap_olrlayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: source_url + "tianditu/general/overlay_r/{z}/{x}/{y}.png"
+      // url: source_url + "tianditu/general/overlay_r/{z}/{x}/{y}.png"
+        url: source_url + "cva_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles"
+            +"&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk="+apikey
     })
 });
 
 //地形图底图
 var tmap_terlayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: source_url + "tianditu/relief/termap/{z}/{x}/{y}.png"
+      // url: source_url + "tianditu/relief/termap/{z}/{x}/{y}.png"
+        url: source_url + "ter_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ter&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles"
+            +"&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk="+apikey
     })
 });
 
 //地形图标注
 var tmap_oltlayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
-      url: source_url + "tianditu/relief/overlay_t/{z}/{x}/{y}.png"
+      // url: source_url + "tianditu/relief/overlay_t/{z}/{x}/{y}.png"
+        url: source_url + "cta_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cta&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles"
+            +"&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk="+apikey
     })
 });
 
 //影像图底图
 var tmap_imglayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
-        url: source_url + "tianditu/images/imgmap/{z}/{x}/{y}.png"
+        url: source_url + "img_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles"
+            +"&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk="+apikey
+        // url: source_url + "tianditu/images/imgmap/{z}/{x}/{y}.png"
     })
 });
 //影像图标注
 var tmap_olilayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
-        url: source_url + "tianditu/images/imglay_r/{z}/{x}/{y}.png"
+        url: source_url + "cia_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cia&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles"
+            +"&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk="+apikey
+        // url: source_url + "tianditu/images/imglay_r/{z}/{x}/{y}.png"
     })
 });
 //影像路线图标注

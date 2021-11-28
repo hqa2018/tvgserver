@@ -1,3 +1,4 @@
+let root_path = "tvgserver/"
 var alertMap = {};//监测项字典信息列
 var pieChart;           //状态饼图
 var stacount = 0;       //台站总数
@@ -48,8 +49,46 @@ function initAlarmSetting() {
         }
     });
 
+    //保存参数
+    $("#saveParam").click(function () {
+        var staid = $(this).attr("value");
+        var message = "您确定要执行保存[" + staid + "]参数操作吗?";
+        var ChCode = [];
+        var LocID = [];
+        var Gain = [];
+        var SensorMode = [];
+        var SensorSen = [];
+        var SensorLow = [];
+        var SensorHigh = [];
+        var DataHP = [];
+        for(var i=0;i<3;i++){
+            ChCode.push($("#ChCode"+i).val());
+            LocID.push($("#LocID"+i).val());
+            Gain.push($("#Gain"+i).val());
+            SensorMode.push($("#SensorMode"+i).val());
+            SensorSen.push($("#SensorSen"+i).val());
+            SensorLow.push($("#SensorLow"+i).val());
+            SensorHigh.push($("#SensorHigh"+i).val());
+            DataHP.push($("#DataHP"+i).val());
+        }
+        $("#ChCode").val(ChCode.toString());
+        $("#LocID").val(LocID.toString());
+        $("#Gain").val(Gain.toString());
+        $("#SensorMode").val(SensorMode.toString());
+        $("#SensorSen").val(SensorSen.toString());
+        $("#SensorLow").val(SensorLow.toString());
+        $("#SensorHigh").val(SensorHigh.toString());
+        $("#DataHP").val(DataHP.toString());
+
+        if (confirm(message)) {
+            $.get("../monitor/savepar",$("#par_form").serialize(),function (resp) {
+                alert("已发送修改指令");
+            });
+        }
+    });
+
     //保存报警参数
-    $(".save_alarm").click(function () {
+    /*$(".save_alarm").click(function () {
         var staid = $(this).attr("id");
         var message = "您确定要执行保存所有报警参数操作吗?";
         if(staid !== "all"){
@@ -85,7 +124,7 @@ function initAlarmSetting() {
                 $("#div_setQJ").css("display", "none");
             });
         }
-    });
+    });*/
 
     //关闭弹出窗
     $(".alarmpar_close").click(function () {
@@ -111,7 +150,6 @@ $(document).ready(function(){
     echarts_1();
     echarts_4();
 
-    updateStationData();
     setInterval(updateStationData, 1000*60);    //定时1分钟加载数据
     // setInterval(refreshPage, 5 * 60 * 1000);    //定时5分钟刷新页面
 
@@ -167,7 +205,7 @@ $(document).ready(function(){
         $("#SensorHigh").val(SensorHigh.toString());
         $("#DataHP").val(DataHP.toString());
         if (confirm(message)) {
-            $.post("/static/monitor/savepar",$("#par_form").serialize(),function (resp) {
+            $.post("..monitor/savepar",$("#par_form").serialize(),function (resp) {
                 alert(resp);
             });
         }
@@ -231,11 +269,14 @@ function alarmHandle(alarmList){
     }*/
 }
 
+//过滤通道
+var chFilter = [6,7,8,9]
+
 //加载基本信息
 function initInfo() {
     $.ajax({
         type: 'GET',
-        url: '../monitor/queryrecord',
+        url: '../monitor/fetchMonStatusData',
         data: {
             manCode, staCode
         },
@@ -244,37 +285,38 @@ function initInfo() {
             $(".info_list").empty()
             var HTML = ""
             stacount = resp.length;
-            // resp = sortDataList(resp)      //按设备类型排序
+            resp = sortDataList(resp)      //按状态进行排序
             for (var i = 0; i < resp.length; i++) {
                 var stacode = resp[i].pointid.split(".")[1]
                 var pointid = resp[i].pointid
-
                 //获取par文件参数内容
-                //初始化最大值
-                for (var k = 3; k <= 9; k++) {
-                    alarmMaxData[stacode + "-" + k] = 0
-                }
                 //batteryObj[stacode] = 0
                 var alertvalue = resp[i]
-                HTML += "<div id=\"" + pointid.replace(".","_") + "\" type=\""+resp[i].devcode+"\" class=\"info boxstyle\">";
-                HTML += "<div class=\"title\"><img src=\"/static/images/info-img-3.png\" width=\"36\">TVG-60[" + resp[i].pointid + "] <span id='" + stacode + "_time' class=\"title-time\">"+resp[i].datatime+"</span></div>"
+                HTML += "<div id=\"" + pointid.replace(".","_") + "\" type=\""+resp[i].devcode+"\" class=\"info boxstyle\" style='margin-left: 5px'>";
+                HTML += "<div class=\"title\"><img src=\"../static/images/info-img-3.png\" width=\"30\">[" + resp[i].pointid + "] <span id='" + stacode + "_time' class=\"title-time\">"+resp[i].datatime+"</span></div>"
                 HTML += "<div class=\"" + stacode + "_info info-main-9 info_lf\">"
                 HTML += "<ul>"
-                HTML += "<li id=\"" + stacode + "_0" + "\"><span>防盗报警</span><img src=\"/static/images/gray_0.png\" style=\"margin-top: 3px;margin-bottom: 3px;width:30px\"></li>"
-                for(var j=1;j<=8;j++){
-                    alertMap[resp[i].pointid + "ch"+j] = Number(alertvalue["ch"+j]);
+                var img = alertvalue.status == "0" ? "gray_0" : "green_0";
+
+                HTML += "<li id=\"" + stacode + "_0" + "\"><span></span><img src=\"../static/images/"+img+".png\" style=\"margin-top: 3px;margin-bottom: 3px;width:30px\"></li>"
+                for(var j=1;j<=11;j++){
+                    //过滤通道
+                    if(chFilter.indexOf(j) > -1){
+                        continue;
+                    }
                     var ch_name = alertvalue["ch"+j+"_name"];
                     var ch_val = Number(alertvalue["ch"+j]);
-                    if(j==1){
+                    if(j==4){
                         ch_val = parseGSPStatus(alertvalue["ch"+j])
                     }
                     // console.log("ch_val="+ch_val)
-                    if(j>3)
-                        ch_val = Number(alertvalue["ch"+j]).toFixed(2)
+                    // if(j>3)
+                    //     ch_val = Number(alertvalue["ch"+j]).toFixed(2)
                     if(resp[i].datatime == "NULL"){
-                        HTML += "<li><span>"+parseChName(j)+"</span><p id=\"" + stacode + "_ch"+j+"\" class=\"text-muted \"> - </p><span>"+parseChUnit(j)+"</span></li>"
+                        HTML += "<li><span>"+ch_name+"</span><p id=\"" + stacode + "_ch"+j+"\" class=\"text-muted \"> - </p></li>"
                     }else{
-                        HTML += "<li><span>"+parseChName(j)+"</span><p id=\"" + stacode + "_ch"+j+"\" class=\"text-success \">" + ch_val + "</p><span>"+parseChUnit(j)+"</span></li>"
+                        // console.log(ch_name+"="+ch_val)
+                        HTML += "<li><span>"+ch_name+"</span><p id=\"" + stacode + "_ch"+j+"\" class=\"text-success \">" + ch_val + "</p></li>"
                     }
                 }
                 HTML += "</ul>"
@@ -285,7 +327,6 @@ function initInfo() {
             // initStationParam();
             // setTimeout(echarts_5, 2000);
             rightclick();
-
             //报警按钮
             $(".alertBtn").bind("click", function () {
                 if ($('#menu').is(':visible')) {
@@ -324,7 +365,7 @@ function initInfo() {
                 var pointid = stationId.split("_")[0];
                 var message = "您确定要进行重启操作吗?"+pointid;
                 if (confirm(message)) {
-                    $.getJSON("/static/monitor/restart",{pointid:pointid},function (resp) {
+                    $.getJSON("../monitor/restart",{pointid:pointid},function (resp) {
                         alert(resp);
                     })
                 }
@@ -342,7 +383,7 @@ function updateStationData() {
     //获取par文件参数内容
     $.ajax({
         type: "GET",
-        url: "../monitor/queryrecord",
+        url: "../monitor/fetchMonStatusData",
         data:{},
         // data: {pointid: "all", manCode: manCode, staCode: staCode},
         success: function (data) {
@@ -359,36 +400,41 @@ function updateStationData() {
                 //数据解析
                 $("#" + stacode + "_time").text(staint.datatime);      //数据时间
                 if(staint.datatime == "NULL"){
+                    $("#" + stacode + "_time").text("中断");      //数据时间
                     for (var n = 1; n <= 8; n++) {
                         $("#" + stacode + "_ch" + n).text("-");
                     }
                 }else{
                     var alarm_trig = false;    //报警触发
                     //防盗未启用
-                    if(staint["guard_status"] === "0"){
+                    if(staint["status"] === "0"){
                         if($("#"+stacode+"_0 img").attr("src").indexOf("gray") === -1)
-                            $("#"+stacode+"_0 img").attr("src","/static/images/gray_0.png?t=" + new Date().getTime())
+                            $("#"+stacode+"_0 img").attr("src","../static/images/green_0.png?t=" + new Date().getTime())
+                            // $("#"+stacode+"_0 img").attr("src","../static/images/gray_0.png?t=" + new Date().getTime())
                     }
                     //防盗正常
-                    if(staint["guard_status"] === "1"){
+                    if(staint["status"] === "1"){
                         if($("#"+stacode+"_0 img").attr("src").indexOf("green") === -1)
-                            $("#"+stacode+"_0 img").attr("src","/static/images/green_0.png?t=" + new Date().getTime())
+                            $("#"+stacode+"_0 img").attr("src","../static/images/green_0.png?t=" + new Date().getTime())
                     }
                     //防盗报警触发
-                    if(staint["guard_status"] === "2"){
+                    if(staint["status"] === "2"){
                         alarm_trig = true;
                         if($("#"+stacode+"_0 img").attr("src").indexOf("red") === -1)
-                            $("#"+stacode+"_0 img").attr("src","/static/images/red_0.png?t=" + new Date().getTime())
+                            $("#"+stacode+"_0 img").attr("src","../static/images/red_0.png?t=" + new Date().getTime())
                     }
-
-                    //阈值触发
-                    for (var n = 3; n <= 8; n++) {
+                    // console.log("../static/images/gray_0.png?t=" + new Date().getTime())
+                    for (var n = 1; n <= 11; n++) {
+                        //过滤通道
+                        if(chFilter.indexOf(n) > -1){
+                            continue;
+                        }
                         var ch_val = staint["ch"+n];
-                        if(n==1){
+                        if(n==4){
+                            // console.log("GPS:"+ch_val)
                             ch_val = parseGSPStatus(ch_val)
                         }
                         $("#" + stacode + "_ch" + n).text(ch_val);
-                        // console.log("ch"+n+"_status:"+staint["ch"+n+"_status"])
                         if(staint["ch"+n+"_status"] === "0"){
                             alarm_trig = true;
                             $("#" + stacode + "_ch" + n).attr("class","text-danger")
@@ -512,12 +558,12 @@ function sortDataList(resp) {
     var arr = []
     for (var i = 0; i < resp.length; i++) {
         var obj = resp[i]
-        arr.push([obj.type, obj])
+        arr.push([obj.status, obj])
     }
     ;
 
     arr.sort(function (a, b) {
-        return a[0].localeCompare(b[0]);
+        return b[0].localeCompare(a[0]);
     });
 
     var resp_arr = []
@@ -607,11 +653,13 @@ function rightclick() {
                 title: '获取状态数据'
                 ,type:'control'
                 ,id: 'monitor'
-            },{
-                title: '设置越界监测'
+            }
+            ,{
+                title: '设置防盗参数'
                 ,type:'control'
                 ,id: 'alert'
-            },{
+            }
+            ,{
                 title: '工作模式'
                 ,id: '#3'
                 ,child: [{
@@ -644,10 +692,12 @@ function rightclick() {
                     ,id: 'tf'
                     ,value:'1'
                 }]
-            },{
+            }
+            /*,{
                 title: '事件下载'
                 ,id: 'download'
-            }]
+            }*/
+            ]
             ,className: 'site-dropdown-custom'
             ,click: function(obj, othis){
                 if(obj.id === 'setpar'){
@@ -804,7 +854,7 @@ function getStaPar(type){
 }
 
 function getAlarmPar(staid) {
-    console.log("staid:"+staid );
+    // console.log("staid:"+staid );
     $("#staAlarmTable").parent().show();
     $.getJSON("../monitor/getAlertConfig",{pointid:staid},function (resp) {
         $("#guardEnable").prop('checked',resp["guardEnable"]);

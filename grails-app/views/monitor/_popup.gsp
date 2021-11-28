@@ -148,20 +148,20 @@
                     <td>启用防盗</td><td colspan="2"><input id="guardEnable" type="checkbox" style="" value="0"/></td>
                 </tr>
                 <tr>
-                    <td>GPS精准度</td><td colspan="2"><input id="range2" style="width:120px"value="0"/></td>
+                    <td>边界值</td><td colspan="2"><input id="range2" style="width:80px"value="0"/></td>
                 </tr>
-                <tr>
+                %{--<tr>
                     <td>阀值</td><td>最小</td><td>最大</td>
-                </tr>
+                </tr>--}%
                 %{--GPS状态, GPS精度, GPS 位置栅栏,垂直向零位,东西向零位, 北南向零位,电池电压,PCB温度--}%
-                <tr>
+                %{--<tr>
                     <td class="labal-param7"><g:fetchnname chn="7"/></td>
                     <td><input id="range7" type="number" style="width:70px"/></td><td><input id="_range7" type="number" style="width:70px"/></td>
                 </tr>
                 <tr>
                     <td class="labal-param8"><g:fetchnname chn="8"/></td>
                     <td><input id="range8" type="number" style="width:70px"/></td><td><input id="_range8" type="number" style="width:70px"/></td>
-                </tr>
+                </tr>--}%
                 </tbody>
             </table>
         </form>

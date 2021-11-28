@@ -394,15 +394,30 @@ h3 {
 	letter-spacing: normal
 }
 
-.mainout .middle_con {
+/*.mainout .middle_con {
 	position: relative;
 	width: 74%;
 	height: calc(100% - .1rem);
 	margin: 0 .5%;
 	background-color: rgba(18,22,64,0.44)
+}*/
+
+.mainout .middle_con {
+	position: relative;
+	width: 99%;
+	height: calc(100% - .5rem);
+	margin: 0 .5%;
+	background-color: rgba(18,22,64,0.44)
 }
 
+/*.mainout .middle_con .middle_top {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}*/
+
 .mainout .middle_con .middle_top {
+	/*display: flex;*/
 	width: 100%;
 	height: 100%;
 	overflow: auto;

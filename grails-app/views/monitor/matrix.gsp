@@ -37,30 +37,27 @@
         </div>
         <div class="middle_con fl">
             %{--设备状态信息详情--}%
-            <div class="table_info">
+            <div class="table_info" style="display: inline;">
                 <div style="text-align: center;background-color: #061537;height: 40px;font-weight: 600;line-height: 36px;">
                     <div class="span_title param_title">
-                        <div class="divset_close btn-close"
-                             style="float:right;margin-right: 5px;width: 26px;margin-top: 7px;line-height: 23px;float: right;background-color: #34444c;height: 26px;">x</div>
                     </div>
                 </div>
-                <table id="staCodeInfoTable" class="info-table">
+                <table class="info-table">
                     <tbody data-stacode="CDGBT">
-                    %{--GPS状态, GPS精度, GPS 位置栅栏,垂直向零位,东西向零位, 北南向零位,电池电压,PCB温度--}%
-                    <tr><td>数据时间</td><td class="data_time" colspan="3"></td></tr>
-                    <tr><td><g:fetchnname chn="1"/></td><td class="ch1_td"></td><td><g:fetchnname chn="2"/></td><td class="ch2_td"></td></tr>
-                    <tr><td><g:fetchnname chn="3"/></td><td class="ch3_td"></td><td><g:fetchnname chn="4"/></td><td class="ch4_td"></td></tr>
-                    <tr><td><g:fetchnname chn="5"/></td><td class="ch5_td"></td><td><g:fetchnname chn="10"/></td><td class="ch10_td"></td></tr>
-                    <tr><td><g:fetchnname chn="11"/></td><td class="ch11_td"></td>%{--<td><g:fetchnname chn="8"/></td><td class="ch8_td"></td>--}%</tr>
+                    <tr><td>经度</td><td><input id="mlon" style="width:120px" value="0"/></td>
+                        <td>纬度</td><td><input id="mlat" style="width:120px" value="0"/></td></tr>
+                    <tr><td>行数</td><td><input id="mrow" style="width:120px" value="0"/></td>
+                        <td>列数</td><td><input id="mcol" style="width:120px" value="0"/></td></tr>
+                    <tr><td>间距</td><td><input id="mgap" style="width:120px" value="0"/></td>
+                        <td>夹角</td><td><input id="mangle" style="width:120px" value="0"/></td></tr>
                     </tbody>
                 </table>
                 <button id="editDev" class="btn-sm btn-default bat_button"
-                    style="background: #747577;margin:5px 0;border:0px solid #fff;padding:3px 10px;color:#fff;">参数修改</button>
-                <button id="rebootDev" class="btn-sm btn-default bat_button" value="AAA"
-                        style="background: #747577;margin:5px 0;border:0px solid #fff;padding:3px 10px;color:#fff;">设备重启</button>
+                        style="background: #747577;margin:5px 0;border:0px solid #fff;padding:3px 10px;color:#fff;">起始点</button>
+                <button id="start_render" class="btn-sm btn-default bat_button" value="AAA"
+                        style="background: #747577;margin:5px 0;border:0px solid #fff;padding:3px 10px;color:#fff;">开始描绘</button>
                 <button id="alertDev" class="btn-sm btn-default bat_button"
                         style="background: #747577;margin:5px 0;border:0px solid #fff;padding:3px 10px;color:#fff;">更多操作</button>
-
             </div>
             %{--加载设置弹出窗--}%
             <g:render template="popup" />
@@ -92,7 +89,7 @@
 <script type="text/javascript" src="${request.getContextPath()}/static/js/openlayers/bmaplayer.js?t=002"></script>
 %{--<script type="text/javascript" src="${request.getContextPath()}/static/js/openlayers/sourcelayers.js?v=080201"></script>--}%
 <script type="text/javascript" src="${request.getContextPath()}/static/js/openlayers/onlinelayers.js?v=080201"></script>
-<script src="${request.getContextPath()}/static/js/mapdata.js?v=080201" type="text/javascript"></script>
-<script src="${request.getContextPath()}/static/js/mapview.js?v=080201" type="text/javascript"></script>
+<script src="${request.getContextPath()}/static/js/matmap.js?v=080201" type="text/javascript"></script>
+<script src="${request.getContextPath()}/static/js/matrix.js?v=080201" type="text/javascript"></script>
 </body>
 </html>

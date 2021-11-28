@@ -3,8 +3,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title><g:pageTitle/></title>
-    %{--<link rel="shortcut icon" href="/static/assets/images/icons/favicon.ico"/>
-    <link rel="bookmark" href="/static/assets/images/icons/favicon.ico"/>--}%
+    %{--<link rel="shortcut icon" href="${request.getContextPath()}/static/assets/images/icons/favicon.ico"/>
+    <link rel="bookmark" href="${request.getContextPath()}/static/assets/images/icons/favicon.ico"/>--}%
     <script type="text/javascript" src="${request.getContextPath()}/static/desktop/js/jquery-1.7.1.min.js"></script>
     %{--<script type="text/javascript" src="../js/jquery-2.1.1.min.js"></script>--}%
     <script type="text/javascript" src="${request.getContextPath()}/static/desktop/js/myLib.js"></script>
@@ -33,7 +33,7 @@
 
             $('#onduty_btn').on('click', function () {
                 $.ajax({
-                    url: "/static/desktop/judgeSpecialdutyExist",
+                    url: "${request.getContextPath()}/static/desktop/judgeSpecialdutyExist",
                     type: "post",
                     data: {
                         "userName": document.getElementById("seiuser").value
@@ -258,7 +258,7 @@
             '/static/desktop/js/desktop.js']);
         $(window).load(function () {
             myLib.stopProgress();
-            $.get("/static/desktop/getRootPath", {}, function (resp) {
+            $.get("${request.getContextPath()}/static/desktop/getRootPath", {}, function (resp) {
                 // alert("设置成功")
                 $("#rootPath").val(resp);
             });
@@ -330,13 +330,13 @@
             //存储桌面布局元素的jquery对象
             myLib.desktop.desktopPanel();
             //初始化桌面背景
-            //myLib.desktop.wallpaper.init("/static/desktop/images/blue_glow.jpg");
+            //myLib.desktop.wallpaper.init("${request.getContextPath()}/static/desktop/images/blue_glow.jpg");
 
             var bgImgUrl = '${bgImgUrl}'
 
             var hostport = document.location.host;
             var hostIp = hostport.split(":")[0]
-            myLib.desktop.wallpaper.init("/static/images/bg_CN.jpg");
+            myLib.desktop.wallpaper.init("${request.getContextPath()}/static/images/bg_CN.jpg");
             //myLib.desktop.wallpaper.init("../images/bg_CN.jpg");
             //初始化任务栏
             myLib.desktop.taskBar.init();
@@ -481,7 +481,7 @@
         function save() {
             var rootPath = $("#rootPath").val();
             if (rootPath != '' || rootPath != null) {
-                $.post("/static/desktop/setRootPath", {path: $("#rootPath").val()}, function () {
+                $.post("${request.getContextPath()}/static/desktop/setRootPath", {path: $("#rootPath").val()}, function () {
                     alert("设置成功");
                     $('#NoteDiv').hide();
                 })
@@ -579,13 +579,13 @@
     <div id="desktopInnerPanel" class="ui-draggable">
         <ul class="deskIcon currDesktop desk1 ui-draggable">
             <li class="desktop_icon ui-draggable" id="monitor-environmental"><span class="icon"><img
-                    src="/static/desktop/icon/appicon/td-icon47.png" /></span>
+                    src="${request.getContextPath()}/static/desktop/icon/appicon/td-icon47.png" /></span>
                 <div class="text">
                     环境监控<s></s>
                 </div></li>
 
             <li class="desktop_icon ui-draggable" id="seisearch-data"><span class="icon"><img
-                    src="/static/desktop/icon/appicon/td-icon47.png" /></span>
+                    src="${request.getContextPath()}/static/desktop/icon/appicon/td-icon47.png" /></span>
                 <div class="text">
                     基础数据<s></s>
                 </div></li>
@@ -594,28 +594,28 @@
         </g:if>
         <g:else>
             <li class="desktop_icon" id="monitor-environmental"><span class="icon"><img
-                    src="/static/desktop/icon/appicon/td-icon47.png" /></span>
+                    src="${request.getContextPath()}/static/desktop/icon/appicon/td-icon47.png" /></span>
             <div class="text">
                     环境监控<s></s>
                 </div></li>
     
             <li class="desktop_icon" id="seisearch-data"><span class="icon"><img
-                src="/static/desktop/icon/appicon/td-icon47.png" /></span>
+                src="${request.getContextPath()}/static/desktop/icon/appicon/td-icon47.png" /></span>
             <div class="text">
                 基础数据<s></s>
             </div></li>
             <li class="desktop_icon" id="mlog-center"><span class="icon"><img
-                src="/static/desktop/icon/appicon/td-icon21.png" /></span>
+                src="${request.getContextPath()}/static/desktop/icon/appicon/td-icon21.png" /></span>
             <div class="text">
                 台网维护<s></s>
             </div></li>
             <li class="desktop_icon" id="mlog-station"><span class="icon"><img
-                src="/static/desktop/icon/appicon/td-icon22.png" /></span>
+                src="${request.getContextPath()}/static/desktop/icon/appicon/td-icon22.png" /></span>
             <div class="text">
                 台站维护<s></s>
             </div></li>
             <li class="desktop_icon" id="instrument-data"><span class="icon"><img
-                src="/static/desktop/icon/appicon/td-icon20.png" /></span>
+                src="${request.getContextPath()}/static/desktop/icon/appicon/td-icon20.png" /></span>
             <div class="text">
                 设备管理<s></s>
             </div></li>
@@ -624,21 +624,21 @@
 
         <ul class="deskIcon desk2">
             <!-- <li class="desktop_icon add_icon"><span class="icon"><img
-						src="/static/desktop/images/add_icon.png" /></span>
+						src="${request.getContextPath()}/static/desktop/images/add_icon.png" /></span>
 				<div class="text">
 						添加<s></s>
 					</div></li> -->
         </ul>
         <ul class="deskIcon desk3">
             <!--  	<li class="desktop_icon add_icon"><span class="icon"><img
-						src="/static/desktop/images/add_icon.png" /></span>
+						src="${request.getContextPath()}/static/desktop/images/add_icon.png" /></span>
 				<div class="text">
 						添加<s></s>
 					</div></li>-->
         </ul>
         <ul class="deskIcon desk4">
             <!-- <li class="desktop_icon add_icon"><span class="icon"><img
-						src="/static/desktop/images/add_icon.png" /></span>
+						src="${request.getContextPath()}/static/desktop/images/add_icon.png" /></span>
 				<div class="text">
 						添加<s></s>
 					</div></li> -->

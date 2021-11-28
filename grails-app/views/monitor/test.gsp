@@ -409,7 +409,7 @@
             $("#SensorHigh").val(SensorHigh.toString());
             $("#DataHP").val(DataHP.toString());
             if (confirm(message)) {
-                $.post("/static/monitor/savepar",$("#par_form").serialize(),function (resp) {
+                $.post("${request.getContextPath()}/static/monitor/savepar",$("#par_form").serialize(),function (resp) {
                     alert(resp);
                 });
             }

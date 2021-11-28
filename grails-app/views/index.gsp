@@ -4,10 +4,10 @@
 </head>
 <body>
 <script language="JavaScript">
-    var mindex = "tvgserver/desktop/index";
-    alert(mindex)
+    var mindex = "/desktop/index";
+    // var mindex = "../desktop/index";
+    // alert(mindex)
     window.location = mindex;
-
 </script>
 </body>
 </html>

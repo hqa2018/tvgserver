@@ -1,5 +1,5 @@
-﻿var DEV_CODE = "";
-var POINT_ID = "";
+﻿var DEV_CODE = null;
+var POINT_ID = null;
 var mdate;  //监控数据日期选择
 var tdate;  //触发数据日期选择
 //时间选择器
@@ -49,18 +49,22 @@ function fetchTrigerData() {
 }
 
 function updateWaveform() {
-    $.getJSON("../monitor/getMonStoreData",{pointid:POINT_ID,date:mdate},function (result) {
+    $.getJSON("../monitor/getWaveformData",{pointid:POINT_ID,date:mdate},function (result) {
         if(result["time"].length > 0){
-            for(var i=4;i<=11;i++){
-                echarts_waveform(result["ch"+i],result["time"],"monchart"+i,parseChName((i-3)));
+            for(var i=1;i<=11;i++){
+                if($("#monchart"+i).length > 0){
+                    console.log("monchart"+i)
+                    echarts_waveform(result["ch"+i],result["time"],"monchart"+i,parseChName(i));
+                }
             }
         }else{
             alert(mdate+"无历史数据");
-            for(var i=4;i<=11;i++){
-                echarts_waveform([],[],"monchart"+i,parseChName((i-3)));
+            if($("#monchart"+i).length > 0) {
+                for (var i = 1; i <= 11; i++) {
+                    echarts_waveform([], [], "monchart" + i, parseChName(i));
+                }
             }
         }
-
     });
 }
 
@@ -117,6 +121,13 @@ $(function () {
     $("#devSearch").on("click",function () {
         updateWaveform();
     })
+
+    //2秒自动查询
+    if(POINT_ID && mdate){
+        setTimeout(function () {
+            updateWaveform();
+        }, 2000);
+    }
 
     fetchMonitorData();
     fetchTrigerData();

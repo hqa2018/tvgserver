@@ -3,27 +3,27 @@
 <head>
     <meta charset="utf-8">
     <title>振动监测系统</title>
-    %{--<link rel="Shortcut Icon" href="/static/assets/images/icons/apple-touch-icon-144-precomposed.png">--}%
+    %{--<link rel="Shortcut Icon" href="${request.getContextPath()}/static/assets/images/icons/apple-touch-icon-144-precomposed.png">--}%
     <!--设置是否为缩放模式 -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 新 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" type="text/css" href="https://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.css">
-    <link href="/static/js/mapselect/css/mapTypeSelect.css?t=017" rel="stylesheet">
-    <link href="/static/css/olmap.css?t=018" rel="stylesheet">
+    <link href="${request.getContextPath()}/static/js/mapselect/css/mapTypeSelect.css?t=017" rel="stylesheet">
+    <link href="${request.getContextPath()}/static/css/olmap.css?t=018" rel="stylesheet">
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="/static/js/warning/jquery.min.js"></script>
+    <script src="${request.getContextPath()}/static/js/warning/jquery.min.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="/static/js/warning/bootstrap.min.js"></script>
+    <script src="${request.getContextPath()}/static/js/warning/bootstrap.min.js"></script>
     <!-- 引入 echarts.js -->
     <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
     <!--界面样式-->
-    <script src="/static/js/utils.js"></script>
-    <script src="/static/js/mapselect/js/mapTypeSelect.js?t=018"></script>
-    %{--<script src="/static/js/warning/terminalInfo.js"></script>--}%
-    <link rel="stylesheet" type="text/css" href="/static/css/warning/mapview.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/warning/button.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/map.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <script src="${request.getContextPath()}/static/js/utils.js"></script>
+    <script src="${request.getContextPath()}/static/js/mapselect/js/mapTypeSelect.js?t=018"></script>
+    %{--<script src="${request.getContextPath()}/static/js/warning/terminalInfo.js"></script>--}%
+    <link rel="stylesheet" type="text/css" href="${request.getContextPath()}/static/css/warning/mapview.css">
+    <link rel="stylesheet" type="text/css" href="${request.getContextPath()}/static/css/warning/button.css">
+    <link rel="stylesheet" type="text/css" href="${request.getContextPath()}/static/css/map.css">
+    <link rel="stylesheet" type="text/css" href="${request.getContextPath()}/static/css/index.css">
     <style>
     .info-table tr td {
         padding: 8px;
@@ -71,12 +71,12 @@
 <input hidden class="manCode" value="${session.manCode}"/>
 <div id="load">
     <div class="load_img"><!-- 加载动画 -->
-        <img class="jzxz1" src="/static/images/warning/jzxz1.png">
-        <img class="jzxz2" src="/static/images/warning/jzxz2.png">
+        <img class="jzxz1" src="${request.getContextPath()}/static/images/warning/jzxz1.png">
+        <img class="jzxz2" src="${request.getContextPath()}/static/images/warning/jzxz2.png">
     </div>
 </div>
 <div class="head_top">
-    <img class="img-responsive" src="/static/images/warning/jcdsj_logo.gif">
+    <img class="img-responsive" src="${request.getContextPath()}/static/images/warning/jcdsj_logo.gif">
     <p>振动监测系统</p>
 </div>
 <div class="visual">
@@ -84,7 +84,7 @@
         <div style="height: 60%" class="visual_box">
             <div class="visual_title">
                 <span>监测设备</span>
-                <img src="/static/images/warning/ksh33.png">
+                <img src="${request.getContextPath()}/static/images/warning/ksh33.png">
             </div>
 
             <div class="visual_chart sfzcll" id="mainq" style="height:96%;">
@@ -98,10 +98,10 @@
                 </div>--}%
                 <div style="overflow-y: auto;height: 95%;padding-top:5px;" id="eventUl" class="sfzcll_pos_box">
                     <div data-msgid="" data-location="" data-lon="" data-lat="" data-time="" data-m="" class="sfzcll_box" style="line-height: 64px;">
-                        <img class="sfzcll_bkJk" src="/static/images/warning/ksh34.png">
-                        <img class="sfzcll_bkJk" src="/static/images/warning/ksh34.png">
-                        <img class="sfzcll_bkJk" src="/static/images/warning/ksh34.png">
-                        <img class="sfzcll_bkJk" src="/static/images/warning/ksh34.png">
+                        <img class="sfzcll_bkJk" src="${request.getContextPath()}/static/images/warning/ksh34.png">
+                        <img class="sfzcll_bkJk" src="${request.getContextPath()}/static/images/warning/ksh34.png">
+                        <img class="sfzcll_bkJk" src="${request.getContextPath()}/static/images/warning/ksh34.png">
+                        <img class="sfzcll_bkJk" src="${request.getContextPath()}/static/images/warning/ksh34.png">
                         <div class="sfzcll_smallBk">
                             <div class="ygl" style="line-height: 62px;">
                                 <span>1</span>
@@ -117,7 +117,7 @@
         <div class="visual_box" id="zdzx">
             <div class="visual_title">
                 <span>设备运行统计</span>
-                <img src="/static/images/warning/ksh33.png">
+                <img src="${request.getContextPath()}/static/images/warning/ksh33.png">
             </div>
             <div class="swiper-container visual_swiper1 visual_chart" style="background:#17293e;border:1px solid #05496f;">
                 <div class="swiper-slide" id="main3" style="width: 100%;height:200px;"></div>
@@ -128,10 +128,10 @@
     %{--设备状态监测--}%
     <div style="width: 75%" class="visual_con">
         <div style="height: calc(100% - 6px);" class="visual_conBot">
-            <img class="visual_conBot_l" src="/static/images/warning/ksh42.png">
-            <img class="visual_conBot_2" src="/static/images/warning/ksh43.png">
-            <img class="visual_conBot_3" src="/static/images/warning/ksh44.png">
-            <img class="visual_conBot_4" src="/static/images/warning/ksh45.png">
+            <img class="visual_conBot_l" src="${request.getContextPath()}/static/images/warning/ksh42.png">
+            <img class="visual_conBot_2" src="${request.getContextPath()}/static/images/warning/ksh43.png">
+            <img class="visual_conBot_3" src="${request.getContextPath()}/static/images/warning/ksh44.png">
+            <img class="visual_conBot_4" src="${request.getContextPath()}/static/images/warning/ksh45.png">
 
 
 			%{--设备状态信息详情--}%
@@ -332,11 +332,11 @@
                         style="background: #747577;margin:5px 0;border:0px solid #fff;padding:3px 10px;color:#fff;">保存</button>
             </div>
 
-            %{--<img src="/static/images/location.jpg"
+            %{--<img src="${request.getContextPath()}/static/images/location.jpg"
                  style="position: absolute;z-index: 2;bottom: 45px;left: 15px;width:40px;height:40px;border-radius: 8px;cursor:pointer;"
                  id="resetCenter"/>--}%
 
-            <img src="/static/images/icon_alarm2.png" title="查看报警信息" class="hidden"
+            <img src="${request.getContextPath()}/static/images/icon_alarm2.png" title="查看报警信息" class="hidden"
                  style="position: absolute;z-index: 2;bottom: 45px;left: 15px;width:40px;height:40px;border-radius: 8px;cursor:pointer;"
                  id="alarmCenter"/>
 
@@ -345,8 +345,8 @@
             </div>
             <div class="legend" id="legend">
                 状态类型:&nbsp;
-                <img src="/static/images/station/icon_adp.png"  style="width: 20px;height: 20px"/>&nbsp;正常
-                <img src="/static/images/station/icon_sta0.png" style="width: 20px;height: 20px"/>&nbsp;异常
+                <img src="${request.getContextPath()}/static/images/station/icon_adp.png"  style="width: 20px;height: 20px"/>&nbsp;正常
+                <img src="${request.getContextPath()}/static/images/station/icon_sta0.png" style="width: 20px;height: 20px"/>&nbsp;异常
             <!--<div class="cata_sum">台站个数:&nbsp;<span id="sta_num">&nbsp;0 </span></div>-->
             </div>
 
@@ -358,11 +358,11 @@
     </div>
     <div class="clear"></div>
 </div>
-<link rel="stylesheet" href="/static/js/openlayers/ol.css" type="text/css">
-<script type="text/javascript" src="/static/js/openlayers/ol.js"></script>
-<script type="text/javascript" src="/static/js/openlayers/bmaplayer.js?t=002"></script>
-<script type="text/javascript" src="/static/js/openlayers/sourcelayers.js?v=080201"></script>
-<script src="/static/js/mapdata.js?v=080201" type="text/javascript"></script>
+<link rel="stylesheet" href="${request.getContextPath()}/static/js/openlayers/ol.css" type="text/css">
+<script type="text/javascript" src="${request.getContextPath()}/static/js/openlayers/ol.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/static/js/openlayers/bmaplayer.js?t=002"></script>
+<script type="text/javascript" src="${request.getContextPath()}/static/js/openlayers/sourcelayers.js?v=080201"></script>
+<script src="${request.getContextPath()}/static/js/mapdata.js?v=080201" type="text/javascript"></script>
 <script type="text/javascript">
 $(function () {
     initMapSwitch();    //初始化地图切换控件

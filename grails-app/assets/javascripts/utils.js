@@ -27,25 +27,29 @@ function leftTop(obj){
 }
 
 
-
-
 function parseGSPStatus(value) {
     var content = ""
     switch (value){
         case "0":
-            content = "A状态";
+            // content = "A状态";
+            content = "正常";
             break;
         case "1":
-            content = "B状态";
+            // content = V状态
+            content = "GPS搜索";
             break;
         case "2":
             content = "无时间参数";
             break;
         case "3":
-            content = "B状态";
+            // content = "B状态";
+            // content = "北斗对时";
+            content = "正常";
             break;
         case "4":
-            content = "D状态";
+            // content = "D状态";
+            // content = "GPS北斗对时";
+            content = "正常";
             break;
         case "5":
             content = "关闭或未工作";
@@ -70,27 +74,36 @@ function parseChName(chn) {
     var name = "";
     switch (chn) {
         case 1:
-            name = "GPS状态";
+            name = "经度";
             break;
         case 2:
-            name = "GPS精度";
+            name = "纬度";
             break;
         case 3:
-            name = "GPS位置栅栏";
+            name = "高程(km)";
             break;
         case 4:
-            name = "垂直向零位";
+            name = "GPS状态";
             break;
         case 5:
-            name = "东西向零位";
+            name = "GPS精度(m)";
             break;
         case 6:
-            name = "北南向零位";
+            name = "GPS位置栅栏";
             break;
         case 7:
-            name = "电池电压";
+            name = "垂直向零位";
             break;
         case 8:
+            name = "东西向零位";
+            break;
+        case 9:
+            name = "北南向零位";
+            break;
+        case 10:
+            name = "电池电压";
+            break;
+        case 11:
             name = "PCB温度";
             break;
         default:

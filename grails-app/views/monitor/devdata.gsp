@@ -1,4 +1,3 @@
-%{--参考模板66--}%
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!doctype html>
 <html>
@@ -107,13 +106,21 @@ button:hover {
                 <button id="devSearch" class="time-button" style="margin-left: 500px">查询</button>
             </div>
             <div class="boxall" style="height:7.5rem;overflow-y: auto">
-                <div class="chnav" id="monchart4"></div>
+                %{--<div class="chnav" id="monchart4"></div>
                 <div class="chnav" id="monchart5"></div>
                 <div class="chnav" id="monchart6"></div>
                 <div class="chnav" id="monchart7"></div>
                 <div class="chnav" id="monchart8"></div>
                 <div class="chnav" id="monchart9"></div>
                 <div class="chnav" id="monchart10"></div>
+                <div class="chnav" id="monchart11"></div>--}%
+                <div class="chnav" id="monchart1"></div>
+                <div class="chnav" id="monchart2"></div>
+                <div class="chnav" id="monchart3"></div>
+                <div class="chnav" id="monchart4"></div>
+                <div class="chnav" id="monchart5"></div>
+                <div class="chnav" id="monchart10"></div>
+                <div class="chnav" id="monchart11"></div>
                 <div class="chnav" id="monchart11"></div>
                 <div class="boxfoot"></div>
             </div>

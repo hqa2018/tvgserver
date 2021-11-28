@@ -263,9 +263,9 @@
                 </div>
             </div>
             %{--<div class="map">
-                <div class="map1"><img src="/static/demo/images/lbx.png"></div>
-                <div class="map2"><img src="/static/demo/images/jt.png"></div>
-                <!-- <div class="map3"><img src="/static/demo/images/map.png"></div>
+                <div class="map1"><img src="${request.getContextPath()}/static/demo/images/lbx.png"></div>
+                <div class="map2"><img src="${request.getContextPath()}/static/demo/images/jt.png"></div>
+                <!-- <div class="map3"><img src="${request.getContextPath()}/static/demo/images/map.png"></div>
                     <div class="map4" id="map_1"></div> -->
             </div>--}%
             <div class="boxall" style="height:100%;margin-top: 5px;">

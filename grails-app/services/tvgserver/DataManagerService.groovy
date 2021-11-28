@@ -134,10 +134,10 @@ class DataManagerService {
                         String deviceName = columnArray2[1];
 //                        println("columnArray2="+columnArray2[0])
                         if(columnArray2[0] == codekey){
-                            def alarmConfig = [:]
-                            alarmConfig = AlarmConifg.findWhere(pointid: codekey)
-                            def gps_stat = columnArray2[5]   //GPS状态
-                            def gps_acc = columnArray2[6]    //GPS精度
+//                            def alarmConfig = [:]
+//                            alarmConfig = AlarmConifg.findWhere(pointid: codekey)
+//                            def gps_stat = columnArray2[5]   //GPS状态
+//                            def gps_acc = columnArray2[6]    //GPS精度
 
                             tempMap.put("status","1");
                             tempMap.put('datatime',columnArray2[1]);
@@ -146,7 +146,7 @@ class DataManagerService {
                             tempMap.put('alt',columnArray2[4]);
                             tempMap.put("guard_status","0");
                             //防盗状态
-                            if(alarmConfig?.guardEnable){
+                            /*if(alarmConfig?.guardEnable){
                                 tempMap.put("guard_status","1");
                                 if(gps_stat == "0"){
                                     if(Double.parseDouble(gps_acc) > Double.parseDouble(alarmConfig["ch2Range"])){
@@ -154,42 +154,54 @@ class DataManagerService {
                                         tempMap.put("status","2");
                                     }
                                 }
-                            }
-                            for(int n=1;n<=8;n++){
+                            }*/
+                            for(int n=1;n<=11;n++){
                                 def name = "GPS状态";
-                                def chval = columnArray2[4+n];
-                                def range = alarmConfig ? alarmConfig["ch"+n+"Range"]:"";
+                                def chval = columnArray2[1+n];
+//                                def range = alarmConfig ? alarmConfig["ch"+n+"Range"]:"";
                                 switch (n) {
                                     case 1:
-                                        name = "GPS状态";
+                                        name = "经度";
+                                        chval = NumberUtils.keepPrecision(chval,3);
                                         break;
                                     case 2:
-                                        name = "GPS精度";
-                                        chval = NumberUtils.keepPrecision(columnArray2[4+n],3);
+                                        name = "纬度";
+                                        chval = NumberUtils.keepPrecision(chval,3);
                                         break;
                                     case 3:
-                                        name = "GPS位置栅栏";
-                                        chval = NumberUtils.keepPrecision(columnArray2[4+n],3);
+                                        name = "高程(km)";
+                                        chval = NumberUtils.keepPrecision(chval,3);
                                         break;
                                     case 4:
-                                        name = "垂直向零位";
-                                        chval = NumberUtils.keepPrecision(columnArray2[4+n],3);
+                                        name = "GPS状态";
                                         break;
                                     case 5:
-                                        name = "东西向零位";
-                                        chval = NumberUtils.keepPrecision(columnArray2[4+n],3);
+                                        name = "GPS精度(m)";
+                                        chval = NumberUtils.keepPrecision(chval,3);
                                         break;
                                     case 6:
-                                        name = "北南向零位";
-                                        chval = NumberUtils.keepPrecision(columnArray2[4+n],3);
+                                        name = "GPS位置栅栏";
+                                        chval = NumberUtils.keepPrecision(chval,3);
                                         break;
                                     case 7:
-                                        name = "电池电压";
-                                        chval = NumberUtils.keepPrecision(columnArray2[4+n],3);
+                                        name = "垂直";
+                                        chval = NumberUtils.keepPrecision(chval,3);
                                         break;
                                     case 8:
-                                        name = "PCB温度";
-                                        chval = NumberUtils.keepPrecision(columnArray2[4+n],3);
+                                        name = "东西";
+                                        chval = NumberUtils.keepPrecision(chval,3);
+                                        break;
+                                    case 9:
+                                        name = "南北";
+                                        chval = NumberUtils.keepPrecision(chval,3);
+                                        break;
+                                    case 10:
+                                        name = "电池电压(V)";
+                                        chval = NumberUtils.keepPrecision(chval,3);
+                                        break;
+                                    case 11:
+                                        name = "温度(℃)";
+                                        chval = NumberUtils.keepPrecision(chval,3);
                                         break;
                                     default:
                                         name = "GPS状态";
@@ -198,7 +210,7 @@ class DataManagerService {
                                 tempMap.put('ch'+n+'_status',"1");
 
                                 //阈值状态
-                                if(range!="#"&range!=""&&range!=null && n > 2){
+                                /*if(range!="#"&range!=""&&range!=null && n > 2){
                                     def min = range.split("#")[0];
                                     def max = range.split("#")[1];
                                     if(Double.parseDouble(chval) > Double.parseDouble(max) || Double.parseDouble(chval) < Double.parseDouble(min)){
@@ -206,7 +218,7 @@ class DataManagerService {
                                         tempMap.put('ch'+n+'_status',"0");
                                         tempMap.put("status","2");
                                     }
-                                }
+                                }*/
                                 tempMap.put('ch'+n+'_name',name);
                                 tempMap.put('ch'+n,chval);
                             }

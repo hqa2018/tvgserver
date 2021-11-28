@@ -3,23 +3,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><g:pageTitle default="Grails"/>测试Git直接push操作</title>
+    <title><g:pageTitle default="Grails"/></title>
     <asset:stylesheet src="Desktop/css/style.css?t=2"/>
     <asset:stylesheet src="Desktop/css/nprogress.css"/>
 </head>
 
 <body>
 <div class="topbnt_left">
-    <img src="lasteq/static/img/hblogo1.png" alt="" width="350px">
+    <img src="../static/img/hblogo1.png" alt="" width="350px">
 </div>
 <div id="desktop">
     <div class="lantern"></div>
     <ul class="list">
         <li data-href="../monitor/realtime"><asset:image src="Desktop/images/td-icon22.png"/><span>实时监控</span></li>
         <li data-href="../monitor/mapview"><asset:image src="Desktop/images/td-icon4.png"/><span>地图监控</span></li>
-        <li data-href="../monitor/runrate"><asset:image src="Desktop/images/td-icon29.png"/><span>事件查询</span></li>
+        <li data-href="../monitor/runrate"><asset:image src="Desktop/images/td-icon29.png"/><span>数据查询</span></li>
         <li data-href="../monitor/devdata"><asset:image src="Desktop/images/td-icon42.png"/><span>历史波形</span></li>
-        <li data-href="../monitor/config"><asset:image src="Desktop/images/td-icon3.png"/><span>参数设置</span></li>
+        %{--<li data-href="../monitor/config"><asset:image src="Desktop/images/td-icon3.png"/><span>参数设置</span></li>--}%
     </ul>
     <div class="date">
         <div class="date-wrapper">

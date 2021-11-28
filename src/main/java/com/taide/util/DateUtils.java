@@ -420,4 +420,61 @@ public class DateUtils {
         return c.getTime();
     }
 
+    /**
+     * 返回下一个月日期
+     * @param date
+     * @return
+     */
+    public static Date getNextMonth(Date date){
+        Calendar c = Calendar.getInstance();
+        c.clear();
+        c.setTime(date);
+        c.add(Calendar.MONTH, 1);
+        return c.getTime();
+    }
+
+    /**
+     * 返回下一个月日期
+     * @param date
+     * @return
+     */
+    public static Date getNextMinute(Date date){
+        Calendar c = Calendar.getInstance();
+        c.clear();
+        c.setTime(date);
+        c.add(Calendar.MINUTE, 1);
+        return c.getTime();
+    }
+
+    public static Date getNextMinute(Date date,int i){
+        Calendar c = Calendar.getInstance();
+        c.clear();
+        c.setTime(date);
+        c.add(Calendar.MINUTE, i);
+        return c.getTime();
+    }
+
+    /**
+     * 获取一天的开始日期 例如：2010-02-15 00:00:00
+     *
+     * @param date
+     *            Date--源日期
+     * @return Date--该天的开始日期
+     */
+    public static Date getBeginOfDay(Date date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        return clearHourMinuteSecond(c.getTime());
+    }
+
+    /*public static void main(String[] args) {
+        for(int i=0;i<1440;i++){
+            Date begin = DateUtils.string2Date("2021-11-21",FormatType.yyyy_MM_dd);
+            DateUtils.date2String(getNextMinute(begin,i),FormatType.yyyy_MM_dd_HH_mm_ss);
+//            System.out.println(getNextMinute(begin,i));
+        }
+
+    }*/
+
 }

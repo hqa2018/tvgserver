@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="名榜,wangid">
-    <title>TDEMonitor地震台站监控运维管理系统</title>
+    <title>TVG地震监测仪系统</title>
 
     <!-- CSS -->
     <asset:stylesheet href="style.css"/>
@@ -24,6 +24,11 @@
     <asset:javascript src="utils.js"/>
     <!-- layui js -->
     <asset:javascript src="layui/layui.js"/>
+    <style type="text/css">
+    .layui-table-cell{
+        padding: 0 5px;
+    }
+    </style>
 </head>
 
 <body>
@@ -33,27 +38,28 @@
     <div class="zy_weizhi bord_b">
         <i class="fa fa-home fa-3x"></i>
         <a>首页</a>
-        <span>台站监测数据列表</span>
+        <span>台站数据质量列表</span>
     </div>
     <!-- 筛选 -->
     <div class="shuaix">
-        <div class="left">
+        %{--<div class="left">
             <select id="dev_status_select">
                 <option value="null">-筛选设备状态-</option>
                 <option value="ALL">全部</option>
                 <option value="1">触发</option>
                 <option value="2">报警</option>
             </select>
-        </div>
+        </div>--}%
         <div class="right">
+            <span>月份选择</span>
             <input type="text" id="search_date" placeholder="请选择日期">
-            <select id="search_type_select">
+            %{--<select id="search_type_select">
                 <option value="null">-选择查询栏目-</option>
                 <option value="stacode">台站代码</option>
                 <option value="staname">台站名称</option>
             </select>
             <input type="text" id="search_value" placeholder="请输入关键词查询">
-            <a href="#" id="bt_searth">查询</a>
+            <a href="#" id="bt_searth">查询</a>--}%
         </div>
     </div>
     <!-- 下面写内容 -->
@@ -106,7 +112,7 @@
         var cols = [];
         var h = [
             {type: 'checkbox', fixed: 'left'}
-            , {field: 'pointid', title: '台站代码',width:120, sort: true, align: 'center'}
+            , {field: 'pointid', title: '台站代码',width:100, align: 'center'}
             // , {field: 'stacode', title: '台站代码', align: 'center'}
             // , {field: 'staname', title: '台站名称', align: 'center', width: 150}
         ]
@@ -114,9 +120,9 @@
         for(var i=1;i<=TimeFrameUtil.daysInMonth(select_month);i++){
             var datestr = select_month + "-" +(i < 10 ? "0"+i : i);
             // console.log(datestr)
-            d.push({field: datestr, title: datestr.split("-")[2], width: 45,event: datestr, align: 'center'})
+            d.push({field: datestr, title: datestr.split("-")[2], width: 40,event: datestr, align: 'center'})
         }
-        d.push({field: 'option', title: '操作', align: 'center', width: 160, toolbar: '#barDemo', fixed: 'right'})
+        d.push({field: 'option', title: '操作', align: 'center', width: 150, toolbar: '#barDemo', fixed: 'right'})
         cols.push($.merge(h, d));
         return cols;
     }
@@ -127,10 +133,16 @@
             var laydate = layui.laydate
             var dropdown = layui.dropdown;
             var table = layui.table;
+            var limit = 12;
+            if(curSelectDataList){
+                limit = curSelectDataList.length < limit ? curSelectDataList.length : limit;
+            }
             table.render({
                 elem: '#test'
                 ,id:"quality"
                 , toolbar: '#toolbarDemo'//工具栏
+                , limit: limit //每页显示条数 注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
+                , page: true //开启分页
                 // ,url:'/demo/table/user.json'
                 ,cellMinWidth: 30 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 ,cols: buildColumn(select_month)
@@ -151,7 +163,7 @@
                                 $('div[lay-id="quality"]').
                                 find('tr[data-index="' + i + '"]').
                                 find('td[data-field="'+datestr+'"]').
-                                css('background-color', '#ffaa00');
+                                css('background-color', '#00c4ff');
                             }else{
                                 $('div[lay-id="quality"]').
                                 find('tr[data-index="' + i + '"]').
@@ -277,18 +289,25 @@
                             title: '查看波形数据'
                             ,id: 'waveform'
                         }, {
+                            title: '下载实时日志'
+                            ,id: 'tracelog'
+                        }
+                        /*, {
                             title: '下载实时数据'
                             ,id: 'trace'
-                        }, {
+                        }*/
+                        /*, {
                             title: '下载触发事件'
                             ,id: 'trigger'
-                        }]
+                        }*/
+                        ]
                         ,click: function(data, othis){
                             //根据 id 做出不同操作
                             if(data.id === 'waveform'){
                                 window.open("../monitor/devdata?devcode="+devcode+"&date="+field)
-                            } else if(data.id === 'trace') {
-                                layer.msg('得到表格下拉菜单 id：'+ data.id);
+                            } else if(data.id === 'tracelog') {
+                                // layer.msg('得到表格下拉菜单 id：'+ data.id);
+                                window.open("../monitor/downloadTraceLog?pointid="+pointid+"&date="+field)
                             }
                         }
                         ,align: 'right' //右对齐弹出（v2.6.8 新增）
@@ -409,7 +428,7 @@
             $("#SensorHigh").val(SensorHigh.toString());
             $("#DataHP").val(DataHP.toString());
             if (confirm(message)) {
-                $.post("/static/monitor/savepar",$("#par_form").serialize(),function (resp) {
+                $.post("${request.getContextPath()}/static/monitor/savepar",$("#par_form").serialize(),function (resp) {
                     alert(resp);
                 });
             }

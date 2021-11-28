@@ -11,121 +11,10 @@ var curSelectMonStatus = "ALL"
 $(function () {
     initMapSwitch();    //初始化地图切换控件
     queryMapData();
-    initControlListener();
     // setInterval(updateMapData, 10000);
-    setTimeout(updateMapData,10000); //定时加载数据
-    updateMapData();
-
-    var a = $('.visualSssf_left a')
-    for (var i = 0; i < a.length; i++) {
-        a[i].index = i;
-        a[i].onclick = function () {
-            for (var i = 0; i < a.length; i++) {
-                a[i].className = ''
-            }
-            this.className = 'active'
-        }
-    }
-
-    var sfzcllH = $('.sfzcll_box').height()
-    var sfzcllHtwo = sfzcllH - 2
-    $('.sfzcll_box').css('line-height', sfzcllH + 'px')
-    $('.sfzcll_smallBk>div').css('line-height', sfzcllHtwo + 'px')
-
-    //删除加载动画
-    $('#load').fadeOut(1000)
-    setTimeout(function () {
-            $('#load').remove()
-        }
-        , 1100);
+    // setTimeout(updateMapData,10000); //定时加载数据
+    // updateMapData();
 });
-
-function initControlListener() {
-    //保存参数
-    $("#saveParam").click(function () {
-        var staid = $(this).attr("value");
-        var message = "您确定要执行保存[" + staid + "]参数操作吗?";
-        var ChCode = [];
-        var LocID = [];
-        var Gain = [];
-        var SensorMode = [];
-        var SensorSen = [];
-        var SensorLow = [];
-        var SensorHigh = [];
-        var DataHP = [];
-        for(var i=0;i<3;i++){
-            ChCode.push($("#ChCode"+i).val());
-            LocID.push($("#LocID"+i).val());
-            Gain.push($("#Gain"+i).val());
-            SensorMode.push($("#SensorMode"+i).val());
-            SensorSen.push($("#SensorSen"+i).val());
-            SensorLow.push($("#SensorLow"+i).val());
-            SensorHigh.push($("#SensorHigh"+i).val());
-            DataHP.push($("#DataHP"+i).val());
-        }
-        $("#ChCode").val(ChCode.toString());
-        $("#LocID").val(LocID.toString());
-        $("#Gain").val(Gain.toString());
-        $("#SensorMode").val(SensorMode.toString());
-        $("#SensorSen").val(SensorSen.toString());
-        $("#SensorLow").val(SensorLow.toString());
-        $("#SensorHigh").val(SensorHigh.toString());
-        $("#DataHP").val(DataHP.toString());
-
-        if (confirm(message)) {
-            $.post("../monitor/savepar",$("#par_form").serialize(),function (resp) {
-                alert(resp);
-            });
-        }
-    });
-
-    //重启按钮
-    $("#rebootDev").bind("click", function () {
-        var pointid = $(this).attr("value");
-        var message = "您确定要进行重启操作吗?"+pointid;
-        if (confirm(message)) {
-            $.getJSON("../monitor/restart",{pointid:pointid},function (resp) {
-                alert("重启完成");
-                // alert(resp);
-            });
-        }
-    });
-
-    //保存报警参数
-    $("#saveAlarm").click(function () {
-        var staid = $(this).attr("value");
-        var message = "您确定要执行保存[" + staid + "]报警参数操作吗?";
-        console.log("range2:"+$("#range2").val());
-        if (confirm(message)) {
-            $.post("../monitor/saveAlertConfig", {
-                pointid : staid,
-                guardEnable : $("#guardEnable").prop("checked"),
-                ch1Range : "",
-                ch2Range : $("#range2").val(),
-                // ch3Range : $("#range3").val()+"#"+$("#_range3").val(),
-                // ch4Range : $("#range4").val()+"#"+$("#_range4").val(),
-                // ch5Range : $("#range5").val()+"#"+$("#_range5").val(),
-                // ch6Range : $("#range6").val()+"#"+$("#_range6").val(),
-                ch3Range : "",
-                ch4Range : "",
-                ch5Range : "",
-                ch6Range : "",
-                ch7Range : $("#range7").val()+"#"+$("#_range7").val(),
-                ch8Range : $("#range8").val()+"#"+$("#_range8").val()
-            },function (resp) {
-                if(staid === "all"){
-                    localStorage.setItem("guardEnable",$("#guardEnable").prop('checked'));
-                    localStorage.setItem("range2",$("#range2").val());
-                    localStorage.setItem("range7",$("#range7").val());
-                    localStorage.setItem("_range7",$("#_range7").val());
-                    localStorage.setItem("range8",$("#range8").val());
-                    localStorage.setItem("_range8",$("#_range8").val());
-                }
-                alert("设置成功");
-            });
-        }
-    });
-}
 
 //初始化弹出窗
 function initPopup(){
@@ -190,20 +79,6 @@ function updateMapData() {
         try {
             lastMonitorDataList = resp
             //进行状态筛选
-            /*statusCount = [0,0,0];	//正常,异常，中断
-            vectorSource.clear();
-            var html = "";
-            if(resp.length > 0){
-                for(var i=0;i<resp.length;i++){
-                    var eqobj = resp[i];
-                    if(eqobj.datatime !== "NULL"){
-                        vectorSource.addFeature(parseFeatureDate(eqobj));
-                        html += parseTableCell(eqobj);
-                    }
-                }
-                statusCount[2] = resp.length - statusCount[0] - statusCount[1]
-                $("#deviceUl").html(html);
-            }*/
             renderMonitorDataByStatus(curSelectMonStatus)
         }catch (e) {
             console.log(e);
